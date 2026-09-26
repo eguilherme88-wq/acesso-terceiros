@@ -184,11 +184,6 @@ tr:last-child td{border-bottom:0}
 .term:-webkit-full-screen{min-height:100vh;height:100%;border-radius:0;border:0}
 .term:fullscreen .tbody,.term:-webkit-full-screen .tbody{flex:1}
 [data-fs-off]{display:none!important}
-.licbar{display:flex;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap;padding:7px 16px;font-size:14px;font-weight:600;
-  background:color-mix(in srgb,var(--warn) 18%,var(--panel));color:var(--ink);border-bottom:1px solid var(--line)}
-.licbar:empty{display:none}
-.bloqueio{max-width:560px;margin:60px auto;padding:28px;text-align:center;display:flex;flex-direction:column;gap:14px;align-items:center}
-.bloqueio .cad{font-size:44px;line-height:1}
 /* Modal e aviso */
 .ov{position:fixed;inset:0;background:rgba(0,0,0,.55);display:grid;place-items:center;z-index:50;padding:16px}
 .modal{background:var(--panel);border:1px solid var(--line);border-radius:12px;width:min(560px,100%);max-height:90vh;overflow:auto;padding:20px;display:flex;flex-direction:column;gap:12px}
@@ -223,7 +218,6 @@ tr:last-child td{border-bottom:0}
     <button id="tema" class="btn ghost sm" aria-label="Alternar tema claro/escuro">◐</button>
   </div>
 </header>
-<div id="licBar" class="licbar" role="status"></div>
 <main id="view"></main>
 <div id="modal"></div>
 
@@ -312,28 +306,6 @@ function liberacoesDe(f){
 function restricoesDe(f){
   return restricoesAtivas().filter(r => (r.alvo === "funcionario" && r.alvoId === f.id) || (r.alvo === "empresa" && r.alvoId === f.empresaId));
 }
-/* Liberação do sistema definida pelo Administrador no SST
-   (Administração › Acesso de Terceiros): desativado, teste até uma data ou liberado. */
-function licenca(){
-  const l = S.lic;
-  if (!l || l.status === "desativado") return { ok:false, motivo:"O sistema de Acesso de Terceiros não está liberado. O Administrador do Sistema SST pode liberar em Administração › Acesso de Terceiros." };
-  if (l.status === "liberado") return { ok:true };
-  if (!l.ate || l.ate < dayKey()) return { ok:false, motivo:`O período de teste terminou${l.ate ? " em " + fmtData(l.ate) : ""}. Fale com o Administrador do Sistema SST para prorrogar ou contratar.` };
-  const dias = Math.round((new Date(l.ate + "T12:00:00") - new Date(dayKey() + "T12:00:00")) / 86400000);
-  return { ok:true, teste:true, ate:l.ate, dias };
-}
-let licAnterior = null;
-function licChange(){
-  const L = licenca(), el = $("#licBar");
-  if (el) el.textContent = L.ok && L.teste ? `Versão de teste: ${L.dias === 0 ? "termina hoje" : `termina em ${fmtData(L.ate)} (${L.dias} dia${L.dias === 1 ? "" : "s"})`}.` : "";
-  if (licAnterior !== L.ok && (licAnterior !== null || !L.ok)) navegar();
-  licAnterior = L.ok;
-}
-function vBloqueado(){
-  pararLeitura?.(); estadoTerm = "bloqueado";
-  $("#view").innerHTML = `<section class="card bloqueio"><div class="cad" aria-hidden="true">🔒</div>
-    <h1>Acesso de Terceiros indisponível</h1><p>${esc(licenca().motivo)}</p></section>`;
-}
 /* Decide se o terceiro pode entrar agora. */
 function avaliar(f){
   const t = dayKey(), R = S.cfg.regras, motivos = [];
@@ -372,11 +344,10 @@ onSnapshot(REF_SST, snap => {
     const st = JSON.parse(snap.data().json || "{}");
     S.empresas = st.tercEmpresas || []; S.funcs = st.tercFuncionarios || [];
     S.integ = st.tercIntegracoes || []; S.users = st.usersDb || [];
-    S.lic = st.portariaLicenca || null;
     S.sstOk = true; S.sstErr = "";
   if (rota() === "terminal" && estadoTerm === "idle") { clearTimeout(rearmeT); rearmeT = setTimeout(leituraAuto, 300); }
   }catch(e){ S.sstErr = e.message; }
-  conexao(); licChange(); atualizar();
+  conexao(); atualizar();
 }, e => { S.sstErr = e.message; conexao(); atualizar(); });
 
 onSnapshot(REF_CFG, snap => {
@@ -414,7 +385,6 @@ async function mutCfg(fn){
 /* Registra entrada, saída ou tentativa negada.
    Quem está na planta sai; quem está fora entra (se autorizado). */
 async function registrar(f, metodo, opts = {}){
-  if (!licenca().ok) throw new Error(licenca().motivo);
   const av = avaliar(f), emp = empresaById(f.empresaId), k = dayKey(); let res;
   await runTransaction(db, async tx => {
     const ds = await tx.get(refDia(k)), ps = await tx.get(REF_PRES);
@@ -438,7 +408,6 @@ async function registrar(f, metodo, opts = {}){
   return res;
 }
 async function registrarDesconhecido(metodo){
-  if (!licenca().ok) throw new Error(licenca().motivo);
   const k = dayKey(); const ev = { id: uid(), ts: Date.now(), tipo: "nao_identificado", nome: "Digital não reconhecida", metodo, terminal: dev.terminal || "", motivos: ["Digital sem cadastro válido"] };
   await runTransaction(db, async tx => {
     const ds = await tx.get(refDia(k)); const eventos = ds.exists() ? (ds.data().eventos || []) : [];
@@ -552,7 +521,6 @@ function navegar(){
   const r = rota();
   $$(".nav a").forEach(a => a.dataset.r === r ? a.setAttribute("aria-current","page") : a.removeAttribute("aria-current"));
   fecharModal(); clearTimeout(termT); pararLeitura();
-  if (S.sstOk && !licenca().ok) return vBloqueado();
   if (r === "terminal") vTerminal(); else if (r === "sst") vSST(); else vPortaria();
 }
 function atualizar(){
@@ -793,7 +761,7 @@ let leituraAtiva = false, leituraCtl = null, rearmeT = null, pausada = false;
 function pararLeitura(){ clearTimeout(rearmeT); try{ leituraCtl?.abort(); }catch{} leituraCtl = null; }
 const temDigitalWebauthn = () => Object.values(S.cfg.biometria).some(l => l.some(c => c.provider === "webauthn"));
 function podeAuto(){
-  return dev.auto && dev.provider !== "simulacao" && S.sstOk && licenca().ok && S.cfgOk && rota() === "terminal" && estadoTerm === "idle" && !pausada
+  return dev.auto && dev.provider !== "simulacao" && S.sstOk && S.cfgOk && rota() === "terminal" && estadoTerm === "idle" && !pausada
     && (dev.provider !== "webauthn" || (temDigitalWebauthn() && Bio.webauthnOk())) && !$(".ov");
 }
 function termIdle(msg){
@@ -1257,7 +1225,6 @@ function vDisp(){
 /* ---------- relógio, tema, início ---------- */
 const tick = () => { const t = new Date().toLocaleTimeString("pt-BR", {hour:"2-digit", minute:"2-digit", second:"2-digit"}); $("#clock").textContent = t; const tc = $("#tclock"); if (tc) tc.textContent = t; };
 setInterval(tick, 1000); tick();
-setInterval(licChange, 60000);
 setInterval(() => { if (rota() === "portaria" && $("#pres")) upPresenca(); }, 30000);
 const tema = lsGet("portaria_tema", "dark"); document.documentElement.dataset.theme = tema;
 /* ---------- relatório em PDF ---------- */
