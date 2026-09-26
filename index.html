@@ -184,6 +184,11 @@ tr:last-child td{border-bottom:0}
 .term:-webkit-full-screen{min-height:100vh;height:100%;border-radius:0;border:0}
 .term:fullscreen .tbody,.term:-webkit-full-screen .tbody{flex:1}
 [data-fs-off]{display:none!important}
+.licbar{display:flex;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap;padding:7px 16px;font-size:14px;font-weight:600;
+  background:color-mix(in srgb,var(--warn) 18%,var(--panel));color:var(--ink);border-bottom:1px solid var(--line)}
+.licbar:empty{display:none}
+.bloqueio{max-width:560px;margin:60px auto;padding:28px;text-align:center;display:flex;flex-direction:column;gap:14px;align-items:center}
+.bloqueio .cad{font-size:44px;line-height:1}
 /* Modal e aviso */
 .ov{position:fixed;inset:0;background:rgba(0,0,0,.55);display:grid;place-items:center;z-index:50;padding:16px}
 .modal{background:var(--panel);border:1px solid var(--line);border-radius:12px;width:min(560px,100%);max-height:90vh;overflow:auto;padding:20px;display:flex;flex-direction:column;gap:12px}
@@ -218,6 +223,7 @@ tr:last-child td{border-bottom:0}
     <button id="tema" class="btn ghost sm" aria-label="Alternar tema claro/escuro">◐</button>
   </div>
 </header>
+<div id="licBar" class="licbar" role="status"></div>
 <main id="view"></main>
 <div id="modal"></div>
 
@@ -279,7 +285,7 @@ const S = {
   cfg:{ biometria:{}, restricoes:[], liberacoes:[], vigilantes:[], regras:{...REGRAS_PADRAO} }, cfgOk:false,
   pres:{}, hoje:[], dia:""
 };
-const dev = Object.assign({ provider:"webauthn", localUrl:"http://localhost:5050", terminal:"Portaria principal", vigilante:"" }, lsGet("portaria_dispositivo", {}));
+const dev = Object.assign({ provider:"webauthn", localUrl:"http://localhost:5050", terminal:"Portaria principal", vigilante:"", auto:true }, lsGet("portaria_dispositivo", {}));
 const salvarDev = () => lsSet("portaria_dispositivo", dev);
 
 const empresaById = id => S.empresas.find(e => e.id === id);
@@ -305,6 +311,28 @@ function liberacoesDe(f){
 }
 function restricoesDe(f){
   return restricoesAtivas().filter(r => (r.alvo === "funcionario" && r.alvoId === f.id) || (r.alvo === "empresa" && r.alvoId === f.empresaId));
+}
+/* Liberação do sistema definida pelo Administrador no SST
+   (Administração › Acesso de Terceiros): desativado, teste até uma data ou liberado. */
+function licenca(){
+  const l = S.lic;
+  if (!l || l.status === "desativado") return { ok:false, motivo:"O sistema de Acesso de Terceiros não está liberado. O Administrador do Sistema SST pode liberar em Administração › Acesso de Terceiros." };
+  if (l.status === "liberado") return { ok:true };
+  if (!l.ate || l.ate < dayKey()) return { ok:false, motivo:`O período de teste terminou${l.ate ? " em " + fmtData(l.ate) : ""}. Fale com o Administrador do Sistema SST para prorrogar ou contratar.` };
+  const dias = Math.round((new Date(l.ate + "T12:00:00") - new Date(dayKey() + "T12:00:00")) / 86400000);
+  return { ok:true, teste:true, ate:l.ate, dias };
+}
+let licAnterior = null;
+function licChange(){
+  const L = licenca(), el = $("#licBar");
+  if (el) el.textContent = L.ok && L.teste ? `Versão de teste: ${L.dias === 0 ? "termina hoje" : `termina em ${fmtData(L.ate)} (${L.dias} dia${L.dias === 1 ? "" : "s"})`}.` : "";
+  if (licAnterior !== L.ok && (licAnterior !== null || !L.ok)) navegar();
+  licAnterior = L.ok;
+}
+function vBloqueado(){
+  pararLeitura?.(); estadoTerm = "bloqueado";
+  $("#view").innerHTML = `<section class="card bloqueio"><div class="cad" aria-hidden="true">🔒</div>
+    <h1>Acesso de Terceiros indisponível</h1><p>${esc(licenca().motivo)}</p></section>`;
 }
 /* Decide se o terceiro pode entrar agora. */
 function avaliar(f){
@@ -344,15 +372,18 @@ onSnapshot(REF_SST, snap => {
     const st = JSON.parse(snap.data().json || "{}");
     S.empresas = st.tercEmpresas || []; S.funcs = st.tercFuncionarios || [];
     S.integ = st.tercIntegracoes || []; S.users = st.usersDb || [];
+    S.lic = st.portariaLicenca || null;
     S.sstOk = true; S.sstErr = "";
+  if (rota() === "terminal" && estadoTerm === "idle") { clearTimeout(rearmeT); rearmeT = setTimeout(leituraAuto, 300); }
   }catch(e){ S.sstErr = e.message; }
-  conexao(); atualizar();
+  conexao(); licChange(); atualizar();
 }, e => { S.sstErr = e.message; conexao(); atualizar(); });
 
 onSnapshot(REF_CFG, snap => {
   const d = snap.exists() ? snap.data() : {};
   S.cfg = lerCfg(d);
   S.cfgOk = true; atualizar();
+  if (rota() === "terminal" && estadoTerm === "idle") { clearTimeout(rearmeT); rearmeT = setTimeout(leituraAuto, 300); }
 }, e => toast("Erro ao ler configurações da portaria: " + e.message));
 
 onSnapshot(REF_PRES, snap => { S.pres = snap.exists() ? (snap.data().pessoas || {}) : {}; atualizar(); });
@@ -383,6 +414,7 @@ async function mutCfg(fn){
 /* Registra entrada, saída ou tentativa negada.
    Quem está na planta sai; quem está fora entra (se autorizado). */
 async function registrar(f, metodo, opts = {}){
+  if (!licenca().ok) throw new Error(licenca().motivo);
   const av = avaliar(f), emp = empresaById(f.empresaId), k = dayKey(); let res;
   await runTransaction(db, async tx => {
     const ds = await tx.get(refDia(k)), ps = await tx.get(REF_PRES);
@@ -406,6 +438,7 @@ async function registrar(f, metodo, opts = {}){
   return res;
 }
 async function registrarDesconhecido(metodo){
+  if (!licenca().ok) throw new Error(licenca().motivo);
   const k = dayKey(); const ev = { id: uid(), ts: Date.now(), tipo: "nao_identificado", nome: "Digital não reconhecida", metodo, terminal: dev.terminal || "", motivos: ["Digital sem cadastro válido"] };
   await runTransaction(db, async tx => {
     const ds = await tx.get(refDia(k)); const eventos = ds.exists() ? (ds.data().eventos || []) : [];
@@ -423,7 +456,15 @@ const rnd = n => crypto.getRandomValues(new Uint8Array(n));
 const b64u = buf => btoa(String.fromCharCode(...new Uint8Array(buf))).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
 const unb64u = s => { const t = s.replace(/-/g,"+").replace(/_/g,"/"); return Uint8Array.from(atob(t + "=".repeat((4 - t.length % 4) % 4)), c => c.charCodeAt(0)); };
 const Bio = {
-  webauthnOk: () => !!(window.PublicKeyCredential && navigator.credentials && window.isSecureContext),
+  webauthnOk: () => !!(window.PublicKeyCredential && navigator.credentials && window.isSecureContext) && Bio.origemOk(),
+  /* A leitura de digital no navegador só funciona em endereço https:// (ex.: GitHub Pages) ou http://localhost. */
+  origemOk: () => location.protocol === "https:" || ["localhost", "127.0.0.1"].includes(location.hostname),
+  motivoIndisponivel(){
+    if (location.protocol === "file:") return "O sistema foi aberto direto do arquivo no computador. Para ler a digital, abra pelo endereço https:// do GitHub Pages.";
+    if (!Bio.origemOk()) return "Este endereço não é seguro (http). Para ler a digital, abra o sistema por um endereço https://.";
+    if (!window.PublicKeyCredential) return "Este navegador não tem suporte a leitor de digital. Use Chrome ou Edge atualizados.";
+    return "Leitor de digital indisponível neste navegador.";
+  },
   async cadastrar(f){
     if (dev.provider === "simulacao") return { credId: "sim-" + uid() };
     if (dev.provider === "local"){
@@ -431,7 +472,7 @@ const Bio = {
       const j = await r.json(); if (!r.ok || !j.ok) throw new Error(j.erro || "O leitor não confirmou o cadastro.");
       return { credId: "local-" + (j.ref || f.id) };
     }
-    if (!Bio.webauthnOk()) throw new Error("Este navegador não tem acesso a leitor de digital (é preciso HTTPS e um navegador compatível).");
+    if (!Bio.webauthnOk()) throw new Error(Bio.motivoIndisponivel());
     const cred = await navigator.credentials.create({ publicKey: {
       challenge: rnd(32), rp: { name: "Portaria – Terceiros" },
       user: { id: new TextEncoder().encode(f.id), name: dig(f.cpf) || f.id, displayName: f.nome || "Terceiro" },
@@ -442,19 +483,21 @@ const Bio = {
     return { credId: b64u(cred.rawId) };
   },
   /* Retorna o id do trabalhador identificado ou null. */
-  async identificar(candidato){
+  /* Retorna { fid, lida }: lida=false quando ninguém colocou o dedo (tempo esgotado sem leitura);
+     lida=true e fid=null quando leu uma digital que não está cadastrada. */
+  async identificar(candidato, sinal){
     if (dev.provider === "local"){
-      const r = await fetch(dev.localUrl.replace(/\/$/,"") + "/identificar", { method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({ candidatoId: candidato?.id || null }) });
-      const j = await r.json(); if (!r.ok) throw new Error(j.erro || "Falha na leitura.");
-      if (!j.id && !j.cpf) return null;
-      return (j.id && funcById(j.id)?.id) || S.funcs.find(f => dig(f.cpf) && dig(f.cpf) === dig(j.cpf))?.id || null;
+      const r = await fetch(dev.localUrl.replace(/\/$/,"") + "/identificar", { method:"POST", signal: sinal, headers:{"Content-Type":"application/json"}, body: JSON.stringify({ candidatoId: candidato?.id || null }) });
+      const j = await r.json().catch(() => ({})); if (!r.ok) throw new Error(j.erro || "Falha na leitura.");
+      if (!j.id && !j.cpf) return { fid: null, lida: !!j.naoReconhecida };
+      return { fid: (j.id && funcById(j.id)?.id) || S.funcs.find(f => dig(f.cpf) && dig(f.cpf) === dig(j.cpf))?.id || null, lida: true };
     }
-    if (!Bio.webauthnOk()) throw new Error("Este navegador não tem acesso a leitor de digital.");
+    if (!Bio.webauthnOk()) throw new Error(Bio.motivoIndisponivel());
     const allow = candidato ? credsDe(candidato.id).filter(c => c.provider === "webauthn").map(c => ({ type:"public-key", id: unb64u(c.credId) })) : [];
-    const a = await navigator.credentials.get({ publicKey: { challenge: rnd(32), userVerification: "required", timeout: 60000, allowCredentials: allow } });
+    const a = await navigator.credentials.get({ signal: sinal, publicKey: { challenge: rnd(32), userVerification: "required", timeout: 60000, allowCredentials: allow } });
     const credId = b64u(a.rawId);
-    for (const [fid, lista] of Object.entries(S.cfg.biometria)) if (lista.some(c => c.credId === credId)) return fid;
-    return null;
+    for (const [fid, lista] of Object.entries(S.cfg.biometria)) if (lista.some(c => c.credId === credId)) return { fid, lida: true };
+    return { fid: null, lida: true };
   }
 };
 
@@ -508,14 +551,15 @@ const rota = () => (location.hash.replace("#/","") || "portaria").split("?")[0];
 function navegar(){
   const r = rota();
   $$(".nav a").forEach(a => a.dataset.r === r ? a.setAttribute("aria-current","page") : a.removeAttribute("aria-current"));
-  fecharModal(); clearTimeout(termT);
+  fecharModal(); clearTimeout(termT); pararLeitura();
+  if (S.sstOk && !licenca().ok) return vBloqueado();
   if (r === "terminal") vTerminal(); else if (r === "sst") vSST(); else vPortaria();
 }
 function atualizar(){
   const r = rota();
   if (r === "portaria" && $("#pres")) upPortaria();
   else if (r === "sst" && $("#sstBody")) upSST();
-  else if (r === "terminal" && $("#tbody") && estadoTerm === "idle") termIdle();
+  else if (r === "terminal" && $("#tCarregando") && S.sstOk && estadoTerm === "idle") termIdle();
 }
 window.addEventListener("hashchange", navegar);
 
@@ -742,17 +786,58 @@ function vTerminal(){
   syncTelaCheia();
   termIdle();
 }
+/* ---------- leitura da digital ----------
+   Com "leitura automática" ligada, o terminal fica sempre aguardando o dedo:
+   o terceiro só coloca a digital, para entrar e para sair. */
+let leituraAtiva = false, leituraCtl = null, rearmeT = null, pausada = false;
+function pararLeitura(){ clearTimeout(rearmeT); try{ leituraCtl?.abort(); }catch{} leituraCtl = null; }
+const temDigitalWebauthn = () => Object.values(S.cfg.biometria).some(l => l.some(c => c.provider === "webauthn"));
+function podeAuto(){
+  return dev.auto && dev.provider !== "simulacao" && S.sstOk && licenca().ok && S.cfgOk && rota() === "terminal" && estadoTerm === "idle" && !pausada
+    && (dev.provider !== "webauthn" || (temDigitalWebauthn() && Bio.webauthnOk())) && !$(".ov");
+}
 function termIdle(msg){
   estadoTerm = "idle"; const b = $("#tbody"); if (!b) return;
-  b.className = "tbody";
+  pararLeitura();
+  const auto = dev.auto && dev.provider !== "simulacao";
+  b.className = "tbody"; b.onclick = null; b.removeAttribute("aria-live");
   b.innerHTML = `<button class="fp" id="fpBtn" aria-label="Ler digital">${FP_SVG}</button>
-    <h1>Registre sua entrada ou saída</h1>
-    <p>Toque no círculo e coloque o dedo no leitor.</p>
+    <h1>Coloque o dedo no leitor</h1>
+    <p id="tInstr">${auto && !pausada ? "Para entrar ou sair da empresa. O registro é feito automaticamente." : "Toque no círculo e coloque o dedo no leitor para entrar ou sair."}</p>
     ${msg ? `<p style="color:var(--warn);font-weight:600">${esc(msg)}</p>` : ""}
-    ${!S.sstOk ? `<p class="small">Carregando cadastro de terceiros do SST…</p>` : ""}
-    <button class="link" id="cpfBtn">Informar CPF antes da digital</button>`;
-  $("#fpBtn").onclick = () => lerDigital();
-  $("#cpfBtn").onclick = termCpf;
+    ${dev.provider === "webauthn" && !Bio.webauthnOk() ? `<p class="note" style="max-width:52ch;text-align:left;font-size:15px">${esc(Bio.motivoIndisponivel())}</p>` : ""}
+    ${!S.sstOk ? `<p class="small" id="tCarregando">Carregando cadastro de terceiros do SST…</p>` : ""}
+    <button class="link" id="cpfBtn" style="font-size:15px;opacity:.8">Digital não reconhecida? Informe o CPF (opcional)</button>`;
+  $("#fpBtn").onclick = () => { pausada = false; lerDigital(); };
+  $("#cpfBtn").onclick = () => { pararLeitura(); termCpf(); };
+  clearTimeout(rearmeT); rearmeT = setTimeout(leituraAuto, 400);
+}
+async function leituraAuto(){
+  if (leituraAtiva || !podeAuto()) return;
+  leituraAtiva = true; $("#fpBtn")?.classList.add("lendo");
+  const ctl = leituraCtl = new AbortController(), t0 = Date.now();
+  try{
+    const r = await Bio.identificar(null, ctl.signal);
+    if (ctl.signal.aborted || estadoTerm !== "idle" || rota() !== "terminal") return;
+    if (!r.lida){ leituraAtiva = false; rearmeT = setTimeout(leituraAuto, 150); return; }
+    estadoTerm = "processando"; await concluirLeitura(r.fid);
+  }catch(e){
+    if (ctl.signal.aborted || estadoTerm !== "idle" || rota() !== "terminal") return;
+    if (e.name === "NotAllowedError"){
+      // Tempo de leitura esgotado sem ninguém: volta a aguardar. Cancelado logo ou bloqueado pelo
+      // navegador (exige toque): pausa até alguém tocar no círculo.
+      if (Date.now() - t0 > 20000){ leituraAtiva = false; rearmeT = setTimeout(leituraAuto, 300); return; }
+      pausada = true; leituraAtiva = false; termIdle(); return;
+    }
+    leituraAtiva = false; $("#fpBtn")?.classList.remove("lendo");
+    const m = $("#tInstr"); if (m) m.textContent = "Leitor indisponível: " + e.message + ". Tentando de novo…";
+    rearmeT = setTimeout(leituraAuto, 5000); return;
+  }finally{ if (leituraCtl === ctl) leituraCtl = null; leituraAtiva = false; }
+}
+async function concluirLeitura(fid){
+  const f = fid && funcById(fid);
+  try{ termResultado(f ? await registrar(f, "digital") : await registrarDesconhecido("digital")); }
+  catch(e){ termIdle("Não foi possível gravar o registro: " + e.message); }
 }
 function termCpf(){
   estadoTerm = "cpf"; const b = $("#tbody"); let v = "";
@@ -777,20 +862,23 @@ document.addEventListener("keydown", e => { if (rota() === "terminal" && estadoT
 
 async function lerDigital(candidato){
   if (!S.sstOk){ termIdle("Aguarde: o cadastro do SST ainda está carregando."); return; }
+  pararLeitura();
   if (dev.provider === "simulacao") return simular(candidato);
   if (candidato && dev.provider === "webauthn" && !credsDe(candidato.id).some(c => c.provider === "webauthn"))
     return termResultado({ tipo:"sem_cadastro", nome: candidato.nome });
   estadoTerm = "lendo"; const b = $("#tbody");
   b.className = "tbody";
-  b.innerHTML = `<div class="fp lendo" aria-hidden="true">${FP_SVG}</div><h1>Coloque o dedo no leitor</h1><p>Aguardando a leitura da digital…</p>`;
+  b.innerHTML = `<div class="fp lendo" aria-hidden="true">${FP_SVG}</div><h1>Coloque o dedo no leitor</h1><p>${candidato ? esc(candidato.nome) + ", aguardando" : "Aguardando"} a leitura da digital…</p>`;
+  const ctl = leituraCtl = new AbortController();
   try{
-    const fid = await Bio.identificar(candidato);
-    const f = fid && funcById(fid);
-    if (!f){ const ev = await registrarDesconhecido("digital"); return termResultado(ev); }
-    termResultado(await registrar(f, "digital"));
+    let r;
+    do { r = await Bio.identificar(candidato, ctl.signal); } while (!r.lida && !ctl.signal.aborted && estadoTerm === "lendo");
+    if (ctl.signal.aborted) return;
+    estadoTerm = "processando"; await concluirLeitura(r.fid);
   }catch(e){
+    if (ctl.signal.aborted) return;
     if (e.name === "NotAllowedError" || e.name === "AbortError") termIdle("Leitura cancelada ou tempo esgotado. Tente de novo.");
-    else termIdle("Erro na leitura: " + e.message);
+    else termIdle(Bio.webauthnOk() || dev.provider !== "webauthn" ? "Erro na leitura: " + e.message : "");
   }
 }
 function simular(candidato){
@@ -821,6 +909,7 @@ function termResultado(ev){
   b.className = `tbody res res-${cls}`;
   b.setAttribute("aria-live", "assertive");
   b.innerHTML = `<h1>${titulo}</h1>${corpo}<p class="small">Toque na tela para continuar.</p>`;
+  pausada = false;
   b.onclick = () => { b.onclick = null; clearTimeout(termT); termIdle(); };
   clearTimeout(termT); termT = setTimeout(() => { b.onclick = null; termIdle(); }, espera);
 }
@@ -1145,20 +1234,21 @@ function vDisp(){
     <p class="dim" style="padding:12px 16px 0">Configuração salva só neste navegador. Ajuste em cada computador ou tablet usado como terminal.</p>
     <label style="padding:12px 16px">Nome deste terminal<input type="text" id="dn" value="${esc(dev.terminal)}" placeholder="Ex.: Portaria 1"></label>
     ${[["webauthn","Leitor de digital do dispositivo","Leitor embutido do notebook ou tablet (Windows Hello, Android) ou chave de segurança FIDO2 com digital. Não precisa de programa extra."],
-       ["local","Leitor biométrico externo (serviço local)","Leitor USB de catraca/ponto com um serviço local do fabricante que responda em /cadastrar e /identificar."],
+       ["local","Leitor biométrico externo (serviço local)","Leitor USB de catraca/ponto que identifica a pessoa só pela digital (1 para N). Precisa de um serviço local do fabricante que responda em /cadastrar e /identificar. É a opção indicada para leitura sem toque."],
        ["simulacao","Modo de teste","Sem leitor. Você escolhe quem está registrando. Use só para treinar e testar."]]
       .map(([v,t,d]) => `<label class="opt"><input type="radio" name="prov" value="${v}" ${dev.provider===v?"checked":""}><span><strong>${t}</strong><span class="dim"> ${d}</span></span></label>`).join("")}
+    <label class="rule"><input type="checkbox" id="dauto" ${dev.auto ? "checked" : ""}><span><strong>Leitura automática da digital</strong><span class="dim"> O terminal fica sempre aguardando: o terceiro só coloca o dedo para entrar ou sair, sem tocar na tela. Com o leitor do dispositivo, o navegador pode pedir um toque na primeira leitura.</span></span></label>
     <label style="padding:12px 16px" id="durlw">Endereço do serviço local<input type="url" id="durl" value="${esc(dev.localUrl)}"></label>
     <div style="padding:0 16px 16px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn" id="dsave">Salvar</button><button class="btn ghost" id="dtest">Verificar leitor</button></div>
     <p id="dmsg" style="padding:0 16px 16px"></p></section>`;
   const sync = () => $("#durlw").style.display = $("[name=prov]:checked").value === "local" ? "" : "none"; sync();
   $$("[name=prov]").forEach(r => r.onchange = sync);
-  $("#dsave").onclick = () => { dev.provider = $("[name=prov]:checked").value; dev.terminal = $("#dn").value.trim() || "Terminal"; dev.localUrl = $("#durl").value.trim(); salvarDev(); toast("Configuração do dispositivo salva."); };
+  $("#dsave").onclick = () => { dev.provider = $("[name=prov]:checked").value; dev.terminal = $("#dn").value.trim() || "Terminal"; dev.localUrl = $("#durl").value.trim(); dev.auto = $("#dauto").checked; salvarDev(); toast("Configuração do dispositivo salva."); };
   $("#dtest").onclick = async () => {
     const p = $("[name=prov]:checked").value, m = $("#dmsg");
     if (p === "simulacao"){ m.textContent = "Modo de teste não usa leitor."; return; }
     if (p === "local"){ try{ const r = await fetch($("#durl").value.replace(/\/$/,"") + "/status"); m.textContent = r.ok ? "Serviço local respondeu." : "Serviço respondeu com erro " + r.status; }catch(e){ m.textContent = "Serviço local não respondeu: " + e.message; } return; }
-    if (!Bio.webauthnOk()){ m.textContent = "Este navegador não permite leitura de digital. Abra o sistema por HTTPS em Chrome, Edge ou Safari atualizados."; return; }
+    if (!Bio.webauthnOk()){ m.textContent = Bio.motivoIndisponivel(); return; }
     const emb = await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable?.().catch(() => false);
     m.textContent = emb ? "Leitor biométrico do aparelho disponível." : "Nenhum leitor embutido encontrado. Uma chave de segurança FIDO2 com digital ainda pode ser usada.";
   };
@@ -1167,6 +1257,7 @@ function vDisp(){
 /* ---------- relógio, tema, início ---------- */
 const tick = () => { const t = new Date().toLocaleTimeString("pt-BR", {hour:"2-digit", minute:"2-digit", second:"2-digit"}); $("#clock").textContent = t; const tc = $("#tclock"); if (tc) tc.textContent = t; };
 setInterval(tick, 1000); tick();
+setInterval(licChange, 60000);
 setInterval(() => { if (rota() === "portaria" && $("#pres")) upPresenca(); }, 30000);
 const tema = lsGet("portaria_tema", "dark"); document.documentElement.dataset.theme = tema;
 /* ---------- relatório em PDF ---------- */
