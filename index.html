@@ -3,6 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#232622" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Portaria">
+<meta name="format-detection" content="telephone=no">
 <title>Portaria – Controle de Terceiros</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚧</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -28,7 +35,8 @@
 *{box-sizing:border-box}
 html,body{margin:0;min-height:100%}
 :root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-body{background:var(--base);color:var(--ink);font:15px/1.45 var(--body)}
+body{background:var(--base);color:var(--ink);font:15px/1.45 var(--body);-webkit-tap-highlight-color:transparent;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+button,a{touch-action:manipulation}
 h1,h2,h3{font-family:var(--display);font-weight:600;margin:0;line-height:1.1}
 h1{font-size:30px} h2{font-size:21px} h3{font-size:22px}
 p{margin:0}
@@ -67,6 +75,7 @@ main{padding:18px 20px 40px;max-width:1500px;margin:0 auto}
 .card-h h2{margin-right:auto}
 .btn{background:var(--yellow);color:var(--yellow-ink);border:0;border-radius:7px;padding:9px 15px;font-weight:600;cursor:pointer;white-space:nowrap}
 .btn:hover{filter:brightness(1.07)}
+a.btn{text-decoration:none;display:inline-flex;align-items:center;justify-content:center}
 .btn:disabled{opacity:.45;cursor:not-allowed}
 .btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
 .btn.ghost:hover{background:var(--panel2)}
@@ -184,6 +193,21 @@ tr:last-child td{border-bottom:0}
 .term:-webkit-full-screen{min-height:100vh;height:100%;border-radius:0;border:0}
 .term:fullscreen .tbody,.term:-webkit-full-screen .tbody{flex:1}
 [data-fs-off]{display:none!important}
+.licbar{display:flex;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap;padding:7px 16px;font-size:14px;font-weight:600;
+  background:color-mix(in srgb,var(--warn) 18%,var(--panel));color:var(--ink);border-bottom:1px solid var(--line)}
+.licbar:empty{display:none}
+.bloqueio{max-width:560px;margin:60px auto;padding:28px;text-align:center;display:flex;flex-direction:column;gap:14px;align-items:center}
+.bloqueio .cad{font-size:44px;line-height:1}
+.av{display:inline-grid;place-items:center;width:40px;height:40px;border-radius:50%;overflow:hidden;flex:none;
+  background:var(--panel2);border:1px solid var(--line);color:var(--dim);font-family:var(--display);font-weight:700;font-size:15px;line-height:1}
+.av img{width:100%;height:100%;object-fit:cover;display:block;cursor:zoom-in}
+.av-sm{width:30px;height:30px;font-size:12px}
+.av-lg{width:84px;height:84px;border-radius:12px;font-size:30px}
+.banner.bad .av-lg{border:3px solid #fff}
+.av-xl{width:min(190px,42vw);height:min(190px,42vw);border-radius:18px;font-size:64px;border:4px solid rgba(255,255,255,.9);background:rgba(0,0,0,.15);color:#fff}
+.com-av{display:flex;gap:12px;align-items:center;min-width:0}
+.com-av > div{min-width:0}
+.foto-grande{width:100%;max-height:70vh;object-fit:contain;border-radius:10px;background:#000}
 /* Modal e aviso */
 .ov{position:fixed;inset:0;background:rgba(0,0,0,.55);display:grid;place-items:center;z-index:50;padding:16px}
 .modal{background:var(--panel);border:1px solid var(--line);border-radius:12px;width:min(560px,100%);max-height:90vh;overflow:auto;padding:20px;display:flex;flex-direction:column;gap:12px}
@@ -195,11 +219,109 @@ tr:last-child td{border-bottom:0}
 .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:var(--base);padding:10px 18px;border-radius:8px;font-weight:600;z-index:60;max-width:90vw}
 
 @media (max-width:900px){
-  .cols{grid-template-columns:1fr}
+  .cols{grid-template-columns:minmax(0,1fr)}
   .banner{grid-template-columns:auto 1fr}
   .banner .btn{grid-column:1/-1}
-  .top-r{margin-left:0}
 }
+.nav svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vertical-align:-3px;margin-right:6px}
+.nl-m{display:none}
+.sair-btn{display:inline-flex;align-items:center;gap:6px;color:var(--bad);border-color:color-mix(in srgb,var(--bad) 45%,var(--line))}
+.sair-btn svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.sair-btn:hover{background:color-mix(in srgb,var(--bad) 12%,transparent)}
+.nav a{display:inline-flex;align-items:center}
+
+/* Topo em telas médias: textos secundários viram só ícone para caber numa linha */
+@media (max-width:1380px) and (min-width:761px){
+  #telaCheia .nl-x{display:none}
+  .conn{font-size:0;gap:0} .conn::before{width:11px;height:11px}
+}
+@media (max-width:1060px) and (min-width:761px){
+  .nav a{padding:7px 9px} .top{gap:10px}
+  .nav .nl-x{display:none} .nav .nl-m{display:inline}
+  .sair-btn .nl-x{display:none}
+}
+/* ---------- Celular ---------- */
+@media (max-width:760px){
+  body{font-size:16px;padding-bottom:calc(64px + env(safe-area-inset-bottom,0px))}
+  input,select,textarea{font-size:16px!important} /* evita zoom automático no iPhone */
+  .top{padding:12px 12px 8px;gap:8px;flex-wrap:nowrap}
+  .logo{height:34px}
+  .top-r{margin-left:auto;gap:6px}
+  .clock{font-size:20px}
+  .conn{font-size:0;gap:0} .conn::before{width:11px;height:11px}
+  .nl-x{display:none} .nl-m{display:inline}
+  #telaCheia,#tema,#sairSistema{padding:8px 10px;min-width:40px;min-height:40px}
+  /* Navegação vira barra inferior, ao alcance do polegar */
+  .nav{position:fixed;left:0;right:0;bottom:0;z-index:30;display:grid;grid-template-columns:repeat(3,1fr);gap:0;
+    background:var(--panel);border-top:1px solid var(--line);padding:4px 4px calc(4px + env(safe-area-inset-bottom,0px))}
+  .nav a{flex-direction:column;gap:2px;justify-content:center;padding:6px 2px;border-radius:8px;font-size:12px;font-weight:600;min-height:52px;text-align:center}
+  .nav svg{width:22px;height:22px;margin:0}
+  main{padding:12px 12px 24px}
+  h1{font-size:26px}
+  .btn{min-height:42px}
+  .btn.sm{min-height:38px}
+  .card-h{padding:12px}
+  .card-h h2{width:100%}
+  .card-h > *{min-width:0}
+  html,body{overflow-x:hidden}
+  .card-h .in-sm,.bar .in-sm,.bar select,.bar input{max-width:none;flex:1 1 100%}
+  .bar{padding:10px 12px}
+  .bar .btn{flex:1 1 auto}
+  .plantao{padding:10px 12px}
+  .plantao .btn{flex:1 1 auto}
+  .banner{padding:14px 14px 14px 16px;gap:12px}
+  .banner.bad{padding-left:30px}
+  .banner.bad::before{width:14px}
+  .banner .ico{width:42px;height:42px;font-size:24px}
+  .banner .btn{width:100%}
+  .stats{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+  .stat{padding:8px 10px} .stat b{font-size:22px}
+  .stats .sound{grid-column:1/-1}
+  .pes{grid-template-columns:1fr auto;gap:8px 12px;padding:12px}
+  .pes > div:first-child{grid-column:1/-1}
+  .pes .t{text-align:left;display:flex;gap:8px;align-items:baseline}
+  .pes .btn{justify-self:end}
+  .feed{max-height:none}
+  .ev{grid-template-columns:44px minmax(0,1fr);padding:10px 12px}
+  .chips{overflow-x:auto;flex-wrap:nowrap;width:100%;padding-bottom:2px}
+  .chip{padding:7px 12px;white-space:nowrap}
+  /* Tabelas viram cartões empilhados */
+  .tbl table,.tbl tbody,.tbl tr,.tbl td{display:block;width:100%}
+  .tbl thead{display:none}
+  .tbl tr{padding:10px 12px;border-bottom:1px solid var(--line)}
+  .tbl tr:last-child{border-bottom:0}
+  .tbl td{border:0;padding:5px 0 5px 104px;position:relative;min-height:28px}
+  .tbl td::before{content:attr(data-label);position:absolute;left:0;top:7px;width:96px;color:var(--dim);font-size:12px;font-weight:600;line-height:1.25}
+  .tbl td[data-label=""],.tbl td:first-child{padding-left:0} .tbl td[data-label=""]::before,.tbl td:first-child::before{display:none}
+  .tbl td:first-child{font-size:17px}
+  .acts .btn{flex:1 1 auto}
+  .tabs button{padding:10px 12px}
+  .sst-head h1{font-size:26px}
+  .note{margin:10px 12px!important}
+  /* Janelas sobem de baixo */
+  .ov{place-items:end center;padding:0}
+  .modal{width:100%;max-height:92vh;border-radius:16px 16px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom,0px))}
+  .modal .row .btn{flex:1 1 auto}
+  .toast{bottom:calc(76px + env(safe-area-inset-bottom,0px));width:calc(100% - 24px);text-align:center}
+  /* Terminal */
+  .term{min-height:calc(100dvh - 150px - env(safe-area-inset-bottom,0px));border-radius:10px}
+  .term-bar{padding:10px 12px;gap:8px}
+  .term-bar .logo{height:28px}
+  .term-bar .clock{font-size:18px}
+  .tbody{padding:20px 14px;gap:12px}
+  .tbody p{font-size:17px}
+  .pad{grid-template-columns:repeat(3,minmax(0,1fr));width:min(320px,100%);gap:8px}
+  .pad button{height:64px;font-size:28px}
+  .cpf-box{font-size:34px}
+  .login{margin:16px auto;padding:18px}
+  .bloqueio{margin:24px auto;padding:20px}
+  .licbar{font-size:13px;padding:6px 12px}
+}
+@media (max-width:760px) and (orientation:landscape) and (max-height:500px){
+  .fp{width:120px}
+  .tbody h1{font-size:28px}
+}
+@media (hover:none){ .btn:hover,.chip:hover,.mitem:hover{filter:none} }
 @media (prefers-reduced-motion:reduce){*{animation:none!important}}
 </style>
 </head>
@@ -207,23 +329,25 @@ tr:last-child td{border-bottom:0}
 <header class="top">
   <a class="brand" href="#/portaria" aria-label="Partner – acesso de terceiros, ir para a Portaria"><span class="logo" role="img" aria-hidden="true"></span></a>
   <nav class="nav" aria-label="Seções">
-    <a href="#/portaria" data-r="portaria">Portaria</a>
-    <a href="#/terminal" data-r="terminal">Terminal biométrico</a>
-    <a href="#/sst" data-r="sst">Segurança do Trabalho</a>
+    <a href="#/portaria" data-r="portaria"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21V10l9-6 9 6v11"/><path d="M9 21v-6h6v6"/></svg><span class="nl">Portaria</span></a>
+    <a href="#/terminal" data-r="terminal"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 10a6 6 0 0 1 12 0v2"/><path d="M9 20c-1-2-1-5-1-8a4 4 0 0 1 8 0c0 3 0 5-1 7"/><path d="M12 12c0 3 0 6-2 9"/></svg><span class="nl">Terminal <span class="nl-x">biométrico</span></span></a>
+    <a href="#/sst" data-r="sst"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg><span class="nl"><span class="nl-x">Segurança do Trabalho</span><span class="nl-m">Segurança</span></span></a>
   </nav>
   <div class="top-r">
     <span id="conn" class="conn">Conectando ao SST…</span>
     <span id="clock" class="clock"></span>
-    <button id="telaCheia" class="btn ghost sm" title="Tela cheia (F11)">⛶ Tela cheia</button>
+    <button id="telaCheia" class="btn ghost sm" title="Tela cheia (F11)" aria-label="Tela cheia">⛶ <span class="nl-x">Tela cheia</span></button>
     <button id="tema" class="btn ghost sm" aria-label="Alternar tema claro/escuro">◐</button>
+    <button id="sairSistema" class="btn ghost sm sair-btn" aria-label="Sair do sistema" title="Sair do sistema"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3"/><path d="M10 17l-5-5 5-5"/><path d="M5 12h11"/></svg><span class="nl-x">Sair</span></button>
   </div>
 </header>
+<div id="licBar" class="licbar" role="status"></div>
 <main id="view"></main>
 <div id="modal"></div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
-import { getFirestore, doc, getDoc, onSnapshot, runTransaction } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
+import { getFirestore, doc, getDoc, onSnapshot, runTransaction, deleteDoc, setDoc, collection, query, where, documentId, getDocs } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
 
 /* ============================================================
    CONEXÃO — mesmo projeto Firebase do Sistema SST (modulo-sst).
@@ -297,7 +421,7 @@ const sha = async t => [...new Uint8Array(await crypto.subtle.digest("SHA-256", 
 const vigilantesAtivos = () => S.cfg.vigilantes.filter(v => v.ativo !== false).sort((a,b) => String(a.nome).localeCompare(String(b.nome), "pt-BR"));
 let plantao = lsGet("portaria_plantao", null);
 const lerCfg = d => ({ biometria: d.biometria || {}, restricoes: d.restricoes || [], liberacoes: d.liberacoes || [],
-  vigilantes: d.vigilantes || [], regras: {...REGRAS_PADRAO, ...(d.regras || {})} });
+  vigilantes: d.vigilantes || [], limpezas: d.limpezas || [], regras: {...REGRAS_PADRAO, ...(d.regras || {})} });
 const vale = r => r.ativa && (!r.ate || r.ate >= dayKey());
 const liberacoesAtivas = () => S.cfg.liberacoes.filter(vale);
 function liberacoesDe(f){
@@ -305,6 +429,28 @@ function liberacoesDe(f){
 }
 function restricoesDe(f){
   return restricoesAtivas().filter(r => (r.alvo === "funcionario" && r.alvoId === f.id) || (r.alvo === "empresa" && r.alvoId === f.empresaId));
+}
+/* Liberação do sistema definida pelo Administrador no SST
+   (Administração › Acesso de Terceiros): desativado, teste até uma data ou liberado. */
+function licenca(){
+  const l = S.lic;
+  if (!l || l.status === "desativado") return { ok:false, motivo:"O sistema de Acesso de Terceiros não está liberado. O Administrador do Sistema SST pode liberar em Administração › Acesso de Terceiros." };
+  if (l.status === "liberado") return { ok:true };
+  if (!l.ate || l.ate < dayKey()) return { ok:false, motivo:`O período de teste terminou${l.ate ? " em " + fmtData(l.ate) : ""}. Fale com o Administrador do Sistema SST para prorrogar ou contratar.` };
+  const dias = Math.round((new Date(l.ate + "T12:00:00") - new Date(dayKey() + "T12:00:00")) / 86400000);
+  return { ok:true, teste:true, ate:l.ate, dias };
+}
+let licAnterior = null;
+function licChange(){
+  const L = licenca(), el = $("#licBar");
+  if (el) el.textContent = L.ok && L.teste ? `Versão de teste: ${L.dias === 0 ? "termina hoje" : `termina em ${fmtData(L.ate)} (${L.dias} dia${L.dias === 1 ? "" : "s"})`}.` : "";
+  if (licAnterior !== L.ok && (licAnterior !== null || !L.ok)) navegar();
+  licAnterior = L.ok;
+}
+function vBloqueado(){
+  pararLeitura?.(); estadoTerm = "bloqueado";
+  $("#view").innerHTML = `<section class="card bloqueio"><div class="cad" aria-hidden="true">🔒</div>
+    <h1>Acesso de Terceiros indisponível</h1><p>${esc(licenca().motivo)}</p></section>`;
 }
 /* Decide se o terceiro pode entrar agora. */
 function avaliar(f){
@@ -344,10 +490,12 @@ onSnapshot(REF_SST, snap => {
     const st = JSON.parse(snap.data().json || "{}");
     S.empresas = st.tercEmpresas || []; S.funcs = st.tercFuncionarios || [];
     S.integ = st.tercIntegracoes || []; S.users = st.usersDb || [];
+    S.lic = st.portariaLicenca || null;
+    precarregarFotos();
     S.sstOk = true; S.sstErr = "";
   if (rota() === "terminal" && estadoTerm === "idle") { clearTimeout(rearmeT); rearmeT = setTimeout(leituraAuto, 300); }
   }catch(e){ S.sstErr = e.message; }
-  conexao(); atualizar();
+  conexao(); licChange(); atualizar();
 }, e => { S.sstErr = e.message; conexao(); atualizar(); });
 
 onSnapshot(REF_CFG, snap => {
@@ -374,6 +522,56 @@ function assinarDia(){
 }
 assinarDia(); setInterval(assinarDia, 30000);
 
+/* ---------- fotos dos terceiros (cadastradas no SST) ----------
+   O SST guarda imagens grandes em documentos próprios (sstblob_<id>) e deixa no
+   cadastro só a referência "sstblob:<id>". Aqui as fotos são buscadas sob demanda. */
+const BLOB_COLS = ["sst_erp_state", "sst_fds_files", "sst_erp_backups"];
+const fotoCache = new Map(), fotoPend = new Set();
+async function carregarBlob(id){
+  for (const col of BLOB_COLS){
+    try{
+      const meta = await getDoc(doc(db, col, "sstblob_" + id)); if (!meta.exists()) continue;
+      const m = meta.data();
+      if (!m.chunks) return String(m.data || "") || null;
+      const partes = await Promise.all(Array.from({ length: m.chunks }, (_, i) => getDoc(doc(db, col, `sstblob_${id}__${i}`))));
+      return partes.map(p => p.exists() ? String(p.data().data || "") : "").join("") || null;
+    }catch{}
+  }
+  return null;
+}
+function fotoUrl(f){
+  const v = f?.foto; if (!v || typeof v !== "string") return null;
+  if (v.startsWith("data:image/") || /^https:\/\//.test(v)) return v;
+  const m = /^sstblob:([0-9a-f]{16,64})$/.exec(v); if (!m) return null;
+  const id = m[1];
+  if (fotoCache.has(id)) return fotoCache.get(id);
+  if (!fotoPend.has(id)){
+    fotoPend.add(id);
+    carregarBlob(id).then(url => {
+      fotoCache.set(id, url && url.startsWith("data:image/") ? url : null); fotoPend.delete(id);
+      if (fotoCache.get(id)) $$(`[data-foto]`).forEach(el => { if (funcById(el.dataset.foto)?.foto === v) el.innerHTML = `<img src="${esc(fotoCache.get(id))}" alt="">`; });
+    });
+  }
+  return null;
+}
+const iniciais = nome => String(nome || "?").trim().split(/\s+/).filter(Boolean).map(p => p[0]).filter((_, i, a) => i === 0 || i === a.length - 1).join("").toUpperCase() || "?";
+function avatar(fid, nome, cls = ""){
+  const url = fotoUrl(funcById(fid));
+  return `<span class="av ${cls}" data-foto="${esc(fid || "")}" title="${esc(nome || "")}">${url ? `<img src="${esc(url)}" alt="">` : esc(iniciais(nome))}</span>`;
+}
+/* Clique na foto amplia para o vigilante conferir o rosto. */
+document.addEventListener("click", e => {
+  const img = e.target.closest(".av img"); if (!img || img.closest(".mitem, .tbody.res")) return;
+  e.stopPropagation();
+  const fid = img.closest("[data-foto]")?.dataset.foto, f = funcById(fid);
+  abrirModal(`<img class="foto-grande" src="${esc(img.src)}" alt="Foto de ${esc(f?.nome || "")}">
+    <div><strong style="font-size:18px">${esc(f?.nome || "")}</strong><div class="dim">${esc(empresaById(f?.empresaId)?.razaoSocial || "")}${f?.funcao ? ", " + esc(f.funcao) : ""}</div></div>
+    <div class="row"><button class="btn" id="fotoOk">Fechar</button></div>`, ov => $("#fotoOk", ov).onclick = fecharModal);
+}, true);
+/* Pré-carrega as fotos para o terminal e a portaria mostrarem sem demora. */
+let preFotos = null;
+function precarregarFotos(){ clearTimeout(preFotos); preFotos = setTimeout(() => S.funcs.slice(0, 400).forEach(fotoUrl), 800); }
+
 /* ---------- gravações ---------- */
 async function mutCfg(fn){
   await runTransaction(db, async tx => {
@@ -385,13 +583,14 @@ async function mutCfg(fn){
 /* Registra entrada, saída ou tentativa negada.
    Quem está na planta sai; quem está fora entra (se autorizado). */
 async function registrar(f, metodo, opts = {}){
+  if (!licenca().ok) throw new Error(licenca().motivo);
   const av = avaliar(f), emp = empresaById(f.empresaId), k = dayKey(); let res;
   await runTransaction(db, async tx => {
     const ds = await tx.get(refDia(k)), ps = await tx.get(REF_PRES);
     const eventos = ds.exists() ? (ds.data().eventos || []) : [];
     const pessoas = ps.exists() ? (ps.data().pessoas || {}) : {};
     const dentro = pessoas[f.id], agora = Date.now();
-    if (dentro && agora - dentro.ts < 60000 && !opts.forcar){ res = { duplicado:true, desde: dentro.ts, nome: f.nome }; return; }
+    if (dentro && agora - dentro.ts < 60000 && !opts.forcar){ res = { duplicado:true, desde: dentro.ts, nome: f.nome, funcId: f.id }; return; }
     let tipo = opts.forcar || (dentro ? "saida" : "entrada");
     if (tipo === "entrada" && !av.ok) tipo = "negado";
     const ev = { id: uid(), ts: agora, tipo, funcId: f.id, nome: f.nome || "", cpf: f.cpf || "", empresaId: f.empresaId || "",
@@ -408,6 +607,7 @@ async function registrar(f, metodo, opts = {}){
   return res;
 }
 async function registrarDesconhecido(metodo){
+  if (!licenca().ok) throw new Error(licenca().motivo);
   const k = dayKey(); const ev = { id: uid(), ts: Date.now(), tipo: "nao_identificado", nome: "Digital não reconhecida", metodo, terminal: dev.terminal || "", motivos: ["Digital sem cadastro válido"] };
   await runTransaction(db, async tx => {
     const ds = await tx.get(refDia(k)); const eventos = ds.exists() ? (ds.data().eventos || []) : [];
@@ -521,6 +721,7 @@ function navegar(){
   const r = rota();
   $$(".nav a").forEach(a => a.dataset.r === r ? a.setAttribute("aria-current","page") : a.removeAttribute("aria-current"));
   fecharModal(); clearTimeout(termT); pararLeitura();
+  if (S.sstOk && !licenca().ok) return vBloqueado();
   if (r === "terminal") vTerminal(); else if (r === "sst") vSST(); else vPortaria();
 }
 function atualizar(){
@@ -619,7 +820,7 @@ function upBanner(){
   if (pend.length){
     const e = pend[pend.length - 1];
     el.className = "banner bad" + (pulsar ? " pulse" : ""); pulsar = false;
-    el.innerHTML = `<div class="ico" aria-hidden="true">!</div>
+    el.innerHTML = `${e.funcId ? avatar(e.funcId, e.nome, "av-lg") : `<div class="ico" aria-hidden="true">!</div>`}
       <div><div class="big">Terceiro não autorizado</div>
         <div class="who">${esc(e.nome)} <span style="font-weight:400">— ${esc(e.empresa || "empresa não informada")}, às ${hhmm(e.ts)}</span></div>
         <div class="why">${(e.motivos || []).map(esc).join("<br>")}${pend.length > 1 ? `<br><strong>Mais ${pend.length - 1} alerta(s) sem confirmação.</strong>` : ""}</div></div>
@@ -634,7 +835,7 @@ function upBanner(){
     const [rot, c0] = TIPO[e.tipo] || ["Registro","info"];
     const cls = c0 === "bad" ? "warn" : c0;
     el.className = "banner " + cls;
-    el.innerHTML = `<div class="ico" aria-hidden="true">${e.tipo === "entrada" ? "↓" : e.tipo === "saida" ? "↑" : "!"}</div>
+    el.innerHTML = `${e.funcId ? avatar(e.funcId, e.nome, "av-lg") : `<div class="ico" aria-hidden="true">!</div>`}
       <div><div class="dim small">Último registro, às ${hhmm(e.ts)}${e.ciente ? `, ciente de ${esc(e.ciente.por)}` : ""}</div><div class="big">${esc(rot)}</div>
       <div class="who">${esc(e.nome)}${e.empresa ? ` <span class="dim" style="font-weight:400">— ${esc(e.empresa)}</span>` : ""}</div></div>`;
   } else {
@@ -664,9 +865,9 @@ function upPresenca(){
     const f = funcById(p.id); const av = f ? avaliar(f) : null;
     const alerta = f && !av.ok;
     return `<div class="pes ${alerta ? "alerta" : ""}">
-      <div><div class="nm">${esc(p.nome)}</div><div class="dim">${esc(p.empresa || "—")}${p.funcao ? `, ${esc(p.funcao)}` : ""}</div>
+      <div class="com-av">${avatar(p.id, p.nome)}<div><div class="nm">${esc(p.nome)}</div><div class="dim">${esc(p.empresa || "—")}${p.funcao ? `, ${esc(p.funcao)}` : ""}</div>
         ${alerta ? `<div class="why bad"><strong>${av.restrito ? "Restringido após a entrada" : "Acesso bloqueado agora"}:</strong> ${av.motivos.map(esc).join("; ")}</div>` : ""}
-        ${!f && S.sstOk ? `<div class="why">Não consta mais no cadastro de terceiros do SST.</div>` : ""}</div>
+        ${!f && S.sstOk ? `<div class="why">Não consta mais no cadastro de terceiros do SST.</div>` : ""}</div></div>
       <div class="t"><b>${hhmm(p.ts)}</b><span class="dim small">há ${dur(Date.now() - p.ts)}</span></div>
       <button class="btn ghost sm" data-saida="${esc(p.id)}">Registrar saída</button></div>`;
   }).join("");
@@ -675,7 +876,7 @@ function upPresenca(){
 function linhaEvento(e){
   const [rot, cls] = TIPO[e.tipo] || ["Registro","mute"];
   return `<div class="ev ${e.tipo}"><time>${hhmm(e.ts)}</time><div>
-    <div class="l1"><span class="tag ${e.tipo === "negado" ? "solid-bad" : cls}">${rot}</span><span class="nm">${esc(e.nome)}</span></div>
+    <div class="l1">${e.funcId ? avatar(e.funcId, e.nome, "av-sm") : ""}<span class="tag ${e.tipo === "negado" ? "solid-bad" : cls}">${rot}</span><span class="nm">${esc(e.nome)}</span></div>
     <div class="dim small">${esc(e.empresa || "")}${e.empresa ? ", " : ""}${esc(METODO[e.metodo] || e.metodo || "")}${e.operador ? ` por ${esc(e.operador)}` : ""}${e.tipo === "saida" && e.entradaTs ? `, permaneceu ${dur(e.ts - e.entradaTs)}` : ""}</div>
     ${e.motivos?.length && e.tipo !== "entrada" ? `<div class="why ${e.tipo === "negado" ? "bad" : ""}">${e.motivos.map(esc).join("; ")}</div>` : ""}
     ${e.excecao ? `<div class="why" style="color:var(--info)">Entrada por liberação especial: ${esc(e.excecao)}</div>` : ""}
@@ -699,7 +900,7 @@ function modalManual(preId){
       const res = S.funcs.filter(f => !q || norm(f.nome + " " + (empresaById(f.empresaId)?.razaoSocial || "")).includes(q) || (qd.length >= 3 && dig(f.cpf).includes(qd))).slice(0, 40);
       $("#mres", ov).innerHTML = res.length ? res.map(f => {
         const av = avaliar(f), dentro = !!S.pres[f.id];
-        return `<button class="mitem" data-id="${esc(f.id)}"><span><strong>${esc(f.nome)}</strong><br><span class="dim small">${esc(empresaById(f.empresaId)?.razaoSocial || "—")}</span></span>
+        return `<button class="mitem" data-id="${esc(f.id)}"><span class="com-av">${avatar(f.id, f.nome, "av-sm")}<span><strong>${esc(f.nome)}</strong><br><span class="dim small">${esc(empresaById(f.empresaId)?.razaoSocial || "—")}</span></span></span>
           ${dentro ? `<span class="tag info">Na planta</span>` : av.ok ? `<span class="tag ok">Liberado</span>` : `<span class="tag bad">Não autorizado</span>`}</button>`;
       }).join("") : `<div class="empty">${S.sstOk ? "Nenhum terceiro encontrado." : "Carregando cadastro do SST…"}</div>`;
       $$("[data-id]", ov).forEach(b => b.onclick = () => detalhe(funcById(b.dataset.id)));
@@ -709,7 +910,7 @@ function modalManual(preId){
       const av = avaliar(f), dentro = S.pres[f.id];
       const acao = dentro ? "saida" : av.ok ? "entrada" : "negado";
       $("#mdet", ov).innerHTML = `
-        <div><strong style="font-size:18px">${esc(f.nome)}</strong><div class="dim">${esc(empresaById(f.empresaId)?.razaoSocial || "—")}${f.cpf ? `, CPF ${esc(fmtCpf(f.cpf))}` : ""}</div></div>
+        <div class="com-av">${avatar(f.id, f.nome, "av-lg")}<div><strong style="font-size:18px">${esc(f.nome)}</strong><div class="dim">${esc(empresaById(f.empresaId)?.razaoSocial || "—")}${f.cpf ? `, CPF ${esc(fmtCpf(f.cpf))}` : ""}</div></div></div>
         ${dentro ? `<p>Na planta desde ${hhmm(dentro.ts)}.</p>` : ""}
         ${!av.ok ? `<div class="note" style="border-color:var(--bad)"><strong>${dentro ? "Acesso bloqueado agora" : "Terceiro não autorizado"}</strong><br>${av.motivos.map(esc).join("<br>")}</div>` : ""}
         <p class="small dim">Registrado por ${esc(plantao.nome)} (vigilante de plantão).</p>
@@ -761,7 +962,7 @@ let leituraAtiva = false, leituraCtl = null, rearmeT = null, pausada = false;
 function pararLeitura(){ clearTimeout(rearmeT); try{ leituraCtl?.abort(); }catch{} leituraCtl = null; }
 const temDigitalWebauthn = () => Object.values(S.cfg.biometria).some(l => l.some(c => c.provider === "webauthn"));
 function podeAuto(){
-  return dev.auto && dev.provider !== "simulacao" && S.sstOk && S.cfgOk && rota() === "terminal" && estadoTerm === "idle" && !pausada
+  return dev.auto && dev.provider !== "simulacao" && S.sstOk && licenca().ok && S.cfgOk && rota() === "terminal" && estadoTerm === "idle" && !pausada
     && (dev.provider !== "webauthn" || (temDigitalWebauthn() && Bio.webauthnOk())) && !$(".ov");
 }
 function termIdle(msg){
@@ -856,7 +1057,7 @@ function simular(candidato){
     <div class="row"><button class="btn ghost" id="sunk">Simular digital desconhecida</button><button class="btn ghost" id="scan">Cancelar</button></div>`, ov => {
     const listar = () => { const q = norm($("#sq", ov).value);
       $("#sres", ov).innerHTML = S.funcs.filter(f => !candidato || f.id === candidato.id).filter(f => !q || norm(f.nome + " " + (empresaById(f.empresaId)?.razaoSocial || "")).includes(q)).slice(0, 40)
-        .map(f => `<button class="mitem" data-id="${esc(f.id)}"><span><strong>${esc(f.nome)}</strong><br><span class="dim small">${esc(empresaById(f.empresaId)?.razaoSocial || "—")}</span></span></button>`).join("") || `<div class="empty">Nenhum terceiro.</div>`;
+        .map(f => `<button class="mitem" data-id="${esc(f.id)}"><span class="com-av">${avatar(f.id, f.nome, "av-sm")}<span><strong>${esc(f.nome)}</strong><br><span class="dim small">${esc(empresaById(f.empresaId)?.razaoSocial || "—")}</span></span></span></button>`).join("") || `<div class="empty">Nenhum terceiro.</div>`;
       $$("[data-id]", ov).forEach(b => b.onclick = async () => { fecharModal(); termResultado(await registrar(funcById(b.dataset.id), "teste")); });
     };
     $("#sq", ov).oninput = listar; listar();
@@ -876,7 +1077,8 @@ function termResultado(ev){
   else { cls = "warn"; titulo = "Digital não reconhecida"; corpo = `<p>Tente de novo ou procure a portaria.</p>`; bip("warn"); }
   b.className = `tbody res res-${cls}`;
   b.setAttribute("aria-live", "assertive");
-  b.innerHTML = `<h1>${titulo}</h1>${corpo}<p class="small">Toque na tela para continuar.</p>`;
+  const fotoId = ev.funcId || (ev.tipo === "sem_cadastro" ? S.funcs.find(x => x.nome === ev.nome)?.id : null);
+  b.innerHTML = `${fotoId ? avatar(fotoId, ev.nome, "av-xl") : ""}<h1>${titulo}</h1>${corpo}<p class="small">Toque na tela para continuar.</p>`;
   pausada = false;
   b.onclick = () => { b.onclick = null; clearTimeout(termT); termIdle(); };
   clearTimeout(termT); termT = setTimeout(() => { b.onclick = null; termIdle(); }, espera);
@@ -892,7 +1094,7 @@ function vSST(){
   if (!u) return vLogin();
   $("#view").innerHTML = `
     <div class="sst-head"><div><h1>Segurança do Trabalho</h1><p class="dim">Conectado como ${esc(u.name || u.username)}. Cadastros de empresas e trabalhadores vêm do Sistema SST.</p></div>
-      <button class="btn ghost sm" id="sair">Sair</button></div>
+      <button class="btn ghost sm" id="sair">Trocar usuário</button></div>
     <nav class="tabs" role="tablist">${[["trab","Trabalhadores"],["emp","Empresas"],["vig","Vigilantes"],["regras","Regras de bloqueio"],["hist","Histórico"],["disp","Este dispositivo"]]
       .map(([k,t]) => `<button role="tab" data-t="${k}" aria-selected="${aba===k}">${t}</button>`).join("")}</nav>
     <div id="sstBody"></div>`;
@@ -937,9 +1139,11 @@ function montarAba(){
       <div class="bar"><input type="date" id="hd" class="in-sm" value="${dayKey()}" aria-label="Data">
         <select id="ht" class="in-sm" aria-label="Tipo"><option value="">Todos os tipos</option>${Object.entries(TIPO).map(([k,[t]]) => `<option value="${k}">${t}</option>`).join("")}</select>
         <input type="search" id="hq" class="in-sm" placeholder="Nome ou empresa" aria-label="Buscar no histórico">
-        <button class="btn ghost sm" id="hcsv">Baixar planilha (CSV)</button><button class="btn sm" id="hpdf">Gerar PDF</button></div>
+        <button class="btn ghost sm" id="hcsv">Baixar planilha (CSV)</button><button class="btn sm" id="hpdf">Gerar PDF</button>${ehAdministrador() ? `<button class="btn bad sm" id="hlimpar">Limpar histórico</button>` : ""}</div>
       <div class="tbl" id="hlist"><div class="empty">Carregando…</div></div></section>
-      <section class="card" style="margin-top:14px"><div class="card-h"><h2>Histórico de restrições e liberações</h2></div><div class="tbl" id="rhist"></div></section>`;
+      <section class="card" style="margin-top:14px"><div class="card-h"><h2>Histórico de restrições e liberações</h2></div><div class="tbl" id="rhist"></div></section>
+      ${ehAdministrador() ? `<section class="card" style="margin-top:14px"><div class="card-h"><h2>Limpezas de histórico</h2></div><div class="tbl" id="lhist"></div></section>` : ""}`;
+    $("#hlimpar")?.addEventListener("click", modalLimpar);
     $("#hd").onchange = carregarHist; $("#ht").oninput = desenharHist; $("#hq").oninput = desenharHist;
     $("#hcsv").onclick = baixarCsv; carregarHist();
     $("#hpdf").onclick = () => modalPdf({ de: $("#hd").value || dayKey(), ate: $("#hd").value || dayKey(), tipo: $("#ht").value, q: $("#hq").value });
@@ -986,7 +1190,7 @@ function upTrab(){
   if (!lista.length){ $("#tlist").innerHTML = `<div class="empty">${S.funcs.length ? "Nenhum trabalhador nesse filtro." : "Nenhum terceiro cadastrado no SST. Cadastre em Terceiros › Trabalhadores no Sistema SST."}</div>`; return; }
   $("#tlist").innerHTML = `<table><thead><tr><th>Trabalhador</th><th>Empresa</th><th>Situação de acesso</th><th>Digital</th><th>Ações</th></tr></thead><tbody>
     ${lista.map(f => { const s = situacao(f), cr = credsDe(f.id), rf = resAtiva("funcionario", f.id), lf = libAtiva("funcionario", f.id);
-      return `<tr><td><strong>${esc(f.nome)}</strong><div class="dim small">${f.cpf ? "CPF " + esc(fmtCpf(f.cpf)) : "Sem CPF"}${f.funcao ? ", " + esc(f.funcao) : ""}</div>${S.pres[f.id] ? `<span class="tag info" style="margin-top:4px">Na planta desde ${hhmm(S.pres[f.id].ts)}</span>` : ""}</td>
+      return `<tr><td><div class="com-av">${avatar(f.id, f.nome)}<div><strong>${esc(f.nome)}</strong><div class="dim small">${f.cpf ? "CPF " + esc(fmtCpf(f.cpf)) : "Sem CPF"}${f.funcao ? ", " + esc(f.funcao) : ""}</div></div></div>${S.pres[f.id] ? `<span class="tag info" style="margin-top:4px">Na planta desde ${hhmm(S.pres[f.id].ts)}</span>` : ""}</td>
         <td>${esc(empresaById(f.empresaId)?.razaoSocial || "—")}</td><td>${s.html}</td>
         <td>${cr.length ? `<span class="tag ok">Cadastrada</span><div class="why">${cr.map(c => esc(c.dispositivo || c.provider)).join(", ")}</div>` : `<span class="tag mute">Sem digital</span>`}</td>
         <td><div class="acts">
@@ -1185,7 +1389,88 @@ function baixarCsv(){
   const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob(["\ufeff" + linhas.join("\r\n")], { type:"text/csv;charset=utf-8" }));
   a.download = `portaria_${$("#hd").value}.csv`; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 2000);
 }
+/* ---------- limpeza do histórico (somente Administrador do SST) ---------- */
+function usuarioSst(){ const u = sessao(); return u && S.users.find(x => x.id === u.id); }
+const ehAdministrador = () => usuarioSst()?.role === "Administrador";
+async function diasComRegistro(de, ate){
+  const ini = "portaria_mov_" + (de || "0000"), fim = "portaria_mov_" + (ate || "9999") + "\uf8ff";
+  try{
+    const q = query(collection(db, COL), where(documentId(), ">=", ini), where(documentId(), "<=", fim));
+    return (await getDocs(q)).docs.map(d => d.id.replace("portaria_mov_", ""));
+  }catch{
+    // Sem permissão para listar a coleção: verifica dia a dia (até 2 anos).
+    const lista = diasEntre(de || dayKey(new Date(Date.now() - 730 * 86400000)), ate || dayKey()), achados = [];
+    for (let i = 0; i < lista.length; i += 30){
+      const lote = lista.slice(i, i + 30), snaps = await Promise.all(lote.map(d => getDoc(refDia(d)).catch(() => null)));
+      snaps.forEach((sn, j) => { if (sn && sn.exists()) achados.push(lote[j]); });
+    }
+    return achados;
+  }
+}
+function modalLimpar(){
+  if (!ehAdministrador()) return toast("Somente o Administrador do sistema pode limpar o histórico.");
+  const dia = $("#hd")?.value || dayKey();
+  abrirModal(`<h3>Limpar histórico de movimentação</h3>
+    <p class="dim">Apaga definitivamente os registros de entrada, saída e tentativas negadas. Quem está na planta agora continua na lista. Gere o PDF antes, se precisar guardar.</p>
+    <label>O que apagar<select id="lmodo">
+      <option value="dia">Somente o dia ${fmtData(dia)}</option>
+      <option value="periodo">Um período</option>
+      <option value="tudo">Todo o histórico</option></select></label>
+    <div id="lper" style="display:none;grid-template-columns:1fr 1fr;gap:10px">
+      <label>De<input type="date" id="lde" value="${dia}" max="${dayKey()}"></label>
+      <label>Até<input type="date" id="late" value="${dia}" max="${dayKey()}"></label></div>
+    <label class="rule" style="padding:0;border:0;grid-template-columns:auto 1fr"><input type="checkbox" id="lrest"><span>Também apagar restrições e liberações já encerradas ou vencidas (as ativas são mantidas)</span></label>
+    <label>Confirme com sua senha do Sistema SST<input type="password" id="lsenha" autocomplete="current-password"></label>
+    <p class="err" id="lerr"></p>
+    <div class="row"><button class="btn ghost" id="lcan">Cancelar</button><button class="btn bad" id="lok">Apagar registros</button></div>`, ov => {
+    const modo = $("#lmodo", ov);
+    modo.onchange = () => { $("#lper", ov).style.display = modo.value === "periodo" ? "grid" : "none"; };
+    $("#lcan", ov).onclick = fecharModal;
+    $("#lok", ov).onclick = async () => {
+      const err = $("#lerr", ov), u = usuarioSst();
+      if (!u || u.role !== "Administrador"){ err.textContent = "Somente o Administrador pode limpar o histórico."; return; }
+      if ($("#lsenha", ov).value !== u.pass){ err.textContent = "Senha incorreta."; return; }
+      let de = null, ate = null, rotulo = "Todo o histórico";
+      if (modo.value === "dia"){ de = ate = dia; rotulo = fmtData(dia); }
+      if (modo.value === "periodo"){
+        de = $("#lde", ov).value; ate = $("#late", ov).value;
+        if (!de || !ate || de > ate){ err.textContent = "Confira as datas do período."; return; }
+        rotulo = `${fmtData(de)} a ${fmtData(ate)}`;
+      }
+      const btn = $("#lok", ov); btn.disabled = true; btn.textContent = "Verificando…"; err.textContent = "";
+      try{
+        const dias = await diasComRegistro(de, ate);
+        let total = 0;
+        const snaps = await Promise.all(dias.map(d => getDoc(refDia(d)).catch(() => null)));
+        snaps.forEach(sn => { if (sn && sn.exists()) total += (sn.data().eventos || []).length; });
+        const apagarRest = $("#lrest", ov).checked;
+        fecharModal();
+        if (!total && !apagarRest){ toast("Nenhum registro encontrado nesse período."); return; }
+        if (!await confirmar("Confirmar limpeza", `Serão apagados <strong>${total} registro${total === 1 ? "" : "s"}</strong> (${esc(rotulo)})${apagarRest ? " e as restrições e liberações encerradas" : ""}. Esta ação não pode ser desfeita.`, "Apagar definitivamente", "bad")) return;
+        for (const d of dias){
+          try{ await deleteDoc(refDia(d)); }catch{ await setDoc(refDia(d), { eventos: [], atualizadoEm: Date.now() }); }
+        }
+        await mutCfg(c => {
+          if (apagarRest){ c.restricoes = c.restricoes.filter(vale); c.liberacoes = c.liberacoes.filter(vale); }
+          c.limpezas.push({ id: uid(), em: Date.now(), por: u.name || u.username, periodo: rotulo, registros: total, restricoes: apagarRest });
+        });
+        if (dias.includes(S.dia)) S.hoje = [];
+        toast(`Histórico limpo: ${total} registro${total === 1 ? "" : "s"} apagado${total === 1 ? "" : "s"}.`);
+        if ($("#hlist")) carregarHist();
+        atualizar();
+      }catch(e){ toast("Não foi possível limpar: " + e.message); }
+    };
+  });
+}
+function upLimpezas(){
+  const el = $("#lhist"); if (!el) return;
+  const l = S.cfg.limpezas.slice().sort((a, b) => b.em - a.em);
+  el.innerHTML = l.length ? `<table><thead><tr><th>Quando</th><th>Por</th><th>Período apagado</th><th>Registros</th></tr></thead><tbody>
+    ${l.map(x => `<tr><td>${dataHora(x.em)}</td><td>${esc(x.por)}</td><td>${esc(x.periodo)}${x.restricoes ? `<div class="why">Incluiu restrições e liberações encerradas</div>` : ""}</td><td>${x.registros}</td></tr>`).join("")}</tbody></table>`
+    : `<div class="empty">Nenhuma limpeza realizada.</div>`;
+}
 function upRestHist(){
+  upLimpezas();
   const l = [...S.cfg.restricoes.map(r => ({...r, k:"r"})), ...S.cfg.liberacoes.map(r => ({...r, k:"l"}))].sort((a,b) => b.desde - a.desde);
   $("#rhist").innerHTML = l.length ? `<table><thead><tr><th>Tipo</th><th>Alvo</th><th>Motivo</th><th>Feita em</th><th>Situação</th></tr></thead><tbody>
     ${l.map(r => { const fim = r.k === "r" ? (r.liberadoEm ? `<span class="tag ok">Removida</span><br>${esc(r.liberadoPor || "")} em ${dataHora(r.liberadoEm)}${r.motivoLiberacao ? `<br>${esc(r.motivoLiberacao)}` : ""}` : "")
@@ -1222,9 +1507,20 @@ function vDisp(){
   };
 }
 
+/* ---------- tabelas no celular: cada célula recebe o nome da coluna ---------- */
+function rotularTabelas(raiz = document){
+  raiz.querySelectorAll(".tbl table").forEach(t => {
+    const nomes = [...t.querySelectorAll("thead th")].map(th => th.textContent.trim());
+    if (!nomes.length) return;
+    t.querySelectorAll("tbody tr").forEach(tr => [...tr.children].forEach((td, i) => { if (!td.hasAttribute("data-label")) td.setAttribute("data-label", td.colSpan > 1 ? "" : (nomes[i] || "")); }));
+  });
+}
+new MutationObserver(() => rotularTabelas()).observe(document.getElementById("view"), { childList:true, subtree:true });
+
 /* ---------- relógio, tema, início ---------- */
 const tick = () => { const t = new Date().toLocaleTimeString("pt-BR", {hour:"2-digit", minute:"2-digit", second:"2-digit"}); $("#clock").textContent = t; const tc = $("#tclock"); if (tc) tc.textContent = t; };
 setInterval(tick, 1000); tick();
+setInterval(licChange, 60000);
 setInterval(() => { if (rota() === "portaria" && $("#pres")) upPresenca(); }, 30000);
 const tema = lsGet("portaria_tema", "dark"); document.documentElement.dataset.theme = tema;
 /* ---------- relatório em PDF ---------- */
@@ -1401,7 +1697,7 @@ async function alternarTelaCheia(alvo = document.documentElement){
 function syncTelaCheia(){
   const ativo = fsEl();
   const b = $("#telaCheia");
-  if (b){ b.textContent = ativo ? "⛶ Sair da tela cheia" : "⛶ Tela cheia"; fsSuportado() ? b.removeAttribute("data-fs-off") : b.setAttribute("data-fs-off", ""); }
+  if (b){ b.innerHTML = ativo ? "⛶ <span class='nl-x'>Sair da tela cheia</span>" : "⛶ <span class='nl-x'>Tela cheia</span>"; b.setAttribute("aria-label", ativo ? "Sair da tela cheia" : "Tela cheia"); fsSuportado() ? b.removeAttribute("data-fs-off") : b.setAttribute("data-fs-off", ""); }
   const k = $("#fs");
   if (k){ k.textContent = ativo === $(".term") ? "Sair do modo quiosque" : "Modo quiosque"; fsSuportado() ? k.removeAttribute("data-fs-off") : k.setAttribute("data-fs-off", ""); }
   const m = $("#modal"); if (m && m.parentElement !== hostTela()) hostTela().appendChild(m);
@@ -1413,6 +1709,32 @@ document.addEventListener("keydown", e => {
   if (e.key === "F11"){ e.preventDefault(); alternarTelaCheia(document.documentElement); }
 });
 syncTelaCheia();
+/* ---------- sair do sistema ---------- */
+function sairSistema(){
+  const u = sessao();
+  const itens = [u && `a sessão da Segurança do Trabalho de <strong>${esc(u.name || u.username)}</strong>`,
+    plantao && `o plantão de <strong>${esc(plantao.nome)}</strong> neste posto`].filter(Boolean);
+  abrirModal(`<h3>Sair do sistema</h3>
+    <p>${itens.length ? `Serão encerrados ${itens.join(" e ")}.` : "Nenhuma sessão aberta neste aparelho."} Os registros já feitos continuam salvos.</p>
+    <div class="row"><button class="btn ghost" id="sxc">Cancelar</button><button class="btn bad" id="sxo">Sair</button></div>`, ov => {
+    $("#sxc", ov).onclick = fecharModal;
+    $("#sxo", ov).onclick = async () => {
+      fecharModal(); pararLeitura(); clearTimeout(termT);
+      try{ sessionStorage.removeItem("portaria_user"); }catch{}
+      plantao = null; lsSet("portaria_plantao", null);
+      if (fsEl()) try{ await (document.exitFullscreen?.() || document.webkitExitFullscreen?.()); }catch{}
+      estadoTerm = "saiu";
+      $$(".nav a").forEach(a => a.removeAttribute("aria-current"));
+      $("#view").innerHTML = `<section class="card bloqueio"><div class="cad" aria-hidden="true">👋</div>
+        <h1>Você saiu do sistema</h1><p class="dim">As sessões deste aparelho foram encerradas.</p>
+        <div class="acts" style="justify-content:center">
+          <a class="btn" href="#/portaria" id="sxEntrar">Entrar novamente</a>
+          <a class="btn ghost" href="${esc(new URL("index.html", location.href).href)}">Ir para o Sistema SST</a></div></section>`;
+      $("#sxEntrar").onclick = e => { e.preventDefault(); if (location.hash === "#/portaria") navegar(); else location.hash = "#/portaria"; };
+    };
+  });
+}
+$("#sairSistema").onclick = sairSistema;
 $("#tema").onclick = () => { const t = document.documentElement.dataset.theme === "light" ? "dark" : "light"; document.documentElement.dataset.theme = t; lsSet("portaria_tema", t); };
 navegar();
 </script>
