@@ -252,7 +252,7 @@ tr:last-child td{border-bottom:0}
   .nl-x{display:none} .nl-m{display:inline}
   #telaCheia,#tema,#sairSistema{padding:8px 10px;min-width:40px;min-height:40px}
   /* Navegação vira barra inferior, ao alcance do polegar */
-  .nav{position:fixed;left:0;right:0;bottom:0;z-index:30;display:grid;grid-template-columns:repeat(3,1fr);gap:0;
+  .nav{position:fixed;left:0;right:0;bottom:0;z-index:30;display:grid;grid-template-columns:repeat(4,1fr);gap:0;
     background:var(--panel);border-top:1px solid var(--line);padding:4px 4px calc(4px + env(safe-area-inset-bottom,0px))}
   .nav a{flex-direction:column;gap:2px;justify-content:center;padding:6px 2px;border-radius:8px;font-size:12px;font-weight:600;min-height:52px;text-align:center}
   .nav svg{width:22px;height:22px;margin:0}
@@ -323,6 +323,29 @@ tr:last-child td{border-bottom:0}
 }
 @media (hover:none){ .btn:hover,.chip:hover,.mitem:hover{filter:none} }
 @media (prefers-reduced-motion:reduce){*{animation:none!important}}
+/* ---------- Placa da CIPA (aba própria) ---------- */
+.placa-h{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.placa-h p{margin:4px 0 0}
+.placa-palco{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:clamp(10px,2vw,24px);border-radius:12px;background:#14171a}
+.placa-palco .placa-cipa{max-width:min(1100px,calc((100dvh - 230px) * 1.9));min-width:min(100%,300px)}
+.placa-palco:fullscreen,.placa-palco:-webkit-full-screen{border-radius:0;padding:3vw;min-height:100vh}
+.placa-palco:fullscreen .placa-cipa{max-width:min(96vw,170vh)}
+.placa-recorde{padding:8px 18px;border-radius:999px;background:#14532d;color:#dcfce7;font-weight:600;font-size:clamp(14px,1.6vw,22px);text-align:center}
+.placa-vazio{padding:28px;text-align:center}
+.placa-cipa{container-type:inline-size;width:100%;margin:0 auto}
+.placa-quadro{background:#fff;color:#1f2937;border:1.1cqw solid #16a34a;border-radius:1.2cqw;padding:2.2cqw 3.2cqw 1.8cqw;box-shadow:0 0 0 .35cqw #e5e7eb,0 18px 40px rgba(0,0,0,.18);font-family:"Arial Black",Arial,Helvetica,sans-serif;text-transform:uppercase}
+.placa-topo{min-height:5cqw;display:flex;align-items:center;margin-bottom:1cqw}
+.placa-topo img{max-height:6cqw;max-width:30cqw;object-fit:contain}
+.placa-marca-texto{font-size:2.2cqw;font-weight:900;color:#15803d;letter-spacing:.05em}
+.placa-linha{display:flex;align-items:center;justify-content:center;gap:2.4cqw;font-size:3.5cqw;font-weight:900;letter-spacing:.06em;line-height:1.1;margin:1.3cqw 0;text-align:center;flex-wrap:nowrap}
+.placa-linha-meio{margin-top:.2cqw}
+.placa-num{min-width:14cqw;padding:.5cqw 1.6cqw;border:.35cqw solid #d1d5db;border-radius:.8cqw;background:linear-gradient(#f9fafb,#eef0f3);box-shadow:inset 0 .25cqw .6cqw rgba(0,0,0,.12);color:#b91c1c;font-family:"Courier New",ui-monospace,monospace;font-size:5.6cqw;font-weight:900;letter-spacing:.08em;text-align:center;line-height:1.05}
+.placa-num-rec{color:#15803d}
+.placa-faixa{display:flex;align-items:center;gap:3cqw;background:linear-gradient(180deg,#22c55e,#16a34a);border-radius:.9cqw;padding:1.3cqw 3cqw;margin:2.2cqw 0 1.4cqw}
+.placa-emblema{width:11cqw;height:11cqw;flex:0 0 auto;filter:drop-shadow(0 .3cqw .5cqw rgba(0,0,0,.2))}
+.placa-chamada{flex:1;color:#fff;font-size:3.6cqw;font-weight:900;letter-spacing:.05em;line-height:1.15;text-align:center;text-wrap:balance;text-shadow:0 .2cqw .3cqw rgba(0,0,0,.18)}
+.placa-frase{text-align:center;font-family:Georgia,"Times New Roman",serif;font-style:italic;font-weight:700;text-transform:none;font-size:1.9cqw;color:#111827}
+@media (max-width:760px){.placa-palco{padding:8px}.placa-palco .placa-cipa{max-width:100%}}
 </style>
 </head>
 <body>
@@ -332,6 +355,7 @@ tr:last-child td{border-bottom:0}
     <a href="#/portaria" data-r="portaria"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21V10l9-6 9 6v11"/><path d="M9 21v-6h6v6"/></svg><span class="nl">Portaria</span></a>
     <a href="#/terminal" data-r="terminal"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 10a6 6 0 0 1 12 0v2"/><path d="M9 20c-1-2-1-5-1-8a4 4 0 0 1 8 0c0 3 0 5-1 7"/><path d="M12 12c0 3 0 6-2 9"/></svg><span class="nl">Terminal <span class="nl-x">biométrico</span></span></a>
     <a href="#/sst" data-r="sst"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg><span class="nl"><span class="nl-x">Segurança do Trabalho</span><span class="nl-m">Segurança</span></span></a>
+    <a href="#/placa" data-r="placa"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="1.5"/><path d="M12 16v5"/><path d="M8 21h8"/><path d="M10.5 7.5h3v1.5H15v3h-1.5v1.5h-3V12H9V9h1.5z"/></svg><span class="nl"><span class="nl-x">Placa CIPA</span><span class="nl-m">Placa</span></span></a>
   </nav>
   <div class="top-r">
     <span id="conn" class="conn">Conectando ao SST…</span>
@@ -491,6 +515,10 @@ onSnapshot(REF_SST, snap => {
     S.empresas = st.tercEmpresas || []; S.funcs = st.tercFuncionarios || [];
     S.integ = st.tercIntegracoes || []; S.users = st.usersDb || [];
     S.lic = st.portariaLicenca || null;
+    S.cats = Array.isArray(st.cipaCATs) ? st.cipaCATs : [];
+    S.placa = st.cipaPlaca && typeof st.cipaPlaca === "object" && !Array.isArray(st.cipaPlaca) ? st.cipaPlaca : {};
+    S.empresa = st.company && typeof st.company === "object" && !Array.isArray(st.company) ? st.company : {};
+    S.logoEmpresa = st.companyLogo || "";
     precarregarFotos();
     S.sstOk = true; S.sstErr = "";
   if (rota() === "terminal" && estadoTerm === "idle") { clearTimeout(rearmeT); rearmeT = setTimeout(leituraAuto, 300); }
@@ -722,15 +750,92 @@ function navegar(){
   $$(".nav a").forEach(a => a.dataset.r === r ? a.setAttribute("aria-current","page") : a.removeAttribute("aria-current"));
   fecharModal(); clearTimeout(termT); pararLeitura();
   if (S.sstOk && !licenca().ok) return vBloqueado();
-  if (r === "terminal") vTerminal(); else if (r === "sst") vSST(); else vPortaria();
+  if (r === "terminal") vTerminal(); else if (r === "sst") vSST(); else if (r === "placa") vPlaca(); else vPortaria();
 }
 function atualizar(){
   const r = rota();
   if (r === "portaria" && $("#pres")) upPortaria();
   else if (r === "sst" && $("#sstBody")) upSST();
+  else if (r === "placa" && $("#placaPalco")) upPlaca();
   else if (r === "terminal" && $("#tCarregando") && S.sstOk && estadoTerm === "idle") termIdle();
 }
 window.addEventListener("hashchange", navegar);
+
+/* ============================================================
+   PLACA DA CIPA — dias sem acidentes com afastamento
+   Mesmo cálculo do Sistema SST (CIPA › Placa · Dias sem Acidentes),
+   lido em tempo real do documento principal (CATs e configuração).
+   ============================================================ */
+const placaDia = iso => { const [y,m,d] = String(iso || "").slice(0,10).split("-").map(Number); return (y && m && d) ? Math.round(Date.UTC(y, m-1, d) / 86400000) : null; };
+function placaCfg(){
+  const p = Object.assign({}, S.placa || {});
+  if (typeof p.contarTrajeto !== "boolean") p.contarTrajeto = true;
+  if (typeof p.contarDoenca !== "boolean") p.contarDoenca = false;
+  if (typeof p.frase !== "string") p.frase = "O trabalho engrandece o homem. A segurança engrandece a vida.";
+  if (typeof p.chamada !== "string") p.chamada = "Colabore para melhorar este índice";
+  return p;
+}
+function placaConta(c, p){
+  if (String(c.afastamento || "") !== "Sim" || c.tipoCat === "Reabertura") return false;
+  const tipo = String(c.tipoAcidente || "");
+  if (tipo === "Trajeto" && !p.contarTrajeto) return false;
+  if (tipo === "Doença ocupacional" && !p.contarDoenca) return false;
+  return !!placaDia(c.dataAcidente);
+}
+function calcPlaca(){
+  const p = placaCfg(), hoje = placaDia(dayKey());
+  const eventos = (S.cats || []).filter(c => placaConta(c, p)).map(c => placaDia(c.dataAcidente)).filter(d => d <= hoje).sort((a,b) => a - b);
+  let inicio = placaDia(p.inicio);
+  if (!inicio) inicio = eventos.length ? eventos[0] : hoje;
+  const marcos = [inicio, ...eventos.filter(d => d >= inicio)].filter((d,i,a) => i === 0 || d !== a[i-1]);
+  let recorde = Math.max(0, Number(p.recordeAnterior) || 0);
+  for (let i = 1; i < marcos.length; i++) recorde = Math.max(recorde, marcos[i] - marcos[i-1]);
+  const atual = Math.max(0, hoje - marcos[marcos.length-1]);
+  recorde = Math.max(recorde, atual);
+  return { p, atual, recorde, novoRecorde: atual > 0 && atual === recorde && atual > (Number(p.recordeAnterior) || 0) };
+}
+const placaEmblema = () => `<svg viewBox="0 0 200 200" class="placa-emblema" aria-label="CIPA Segurança" role="img">
+  <defs><path id="placaArcoSup" d="M 34 100 A 66 66 0 0 1 166 100"/><path id="placaArcoInf" d="M 30 100 A 70 70 0 0 0 170 100"/></defs>
+  <circle cx="100" cy="100" r="95" fill="#fff"/><circle cx="100" cy="100" r="88" fill="#16a34a"/><circle cx="100" cy="100" r="54" fill="#fff"/>
+  <path d="M86 62h28v24h24v28h-24v24H86v-24H62V86h24z" fill="#16a34a"/>
+  <text font-family="Arial Black,Arial,sans-serif" font-weight="900" font-size="25" fill="#fff" letter-spacing="6"><textPath href="#placaArcoSup" startOffset="50%" text-anchor="middle">CIPA</textPath></text>
+  <text font-family="Arial Black,Arial,sans-serif" font-weight="900" font-size="19" fill="#fff" letter-spacing="2"><textPath href="#placaArcoInf" startOffset="50%" text-anchor="middle" dominant-baseline="hanging">SEGURANÇA</textPath></text>
+</svg>`;
+function placaHtml(d){
+  const emp = S.empresa || {}, nome = emp.nomeFantasia || emp.razaoSocial || "";
+  const marca = S.logoEmpresa ? `<img src="${esc(S.logoEmpresa)}" alt="${esc(nome || "Logomarca")}">` : (nome ? `<span class="placa-marca-texto">${esc(nome)}</span>` : "");
+  return `<div class="placa-cipa"><div class="placa-quadro">
+    <div class="placa-topo">${marca}</div>
+    <div class="placa-linha"><span>Estamos trabalhando há</span><span class="placa-num">${d.atual}</span><span>${d.atual === 1 ? "dia" : "dias"}</span></div>
+    <div class="placa-linha placa-linha-meio"><span>sem acidentes com afastamento</span></div>
+    <div class="placa-linha"><span>Nosso recorde é de</span><span class="placa-num placa-num-rec">${d.recorde}</span><span>${d.recorde === 1 ? "dia" : "dias"}</span></div>
+    <div class="placa-faixa">${placaEmblema()}<div class="placa-chamada">${esc(d.p.chamada || "")}</div></div>
+    ${d.p.frase ? `<div class="placa-frase">“${esc(d.p.frase)}”</div>` : ""}
+  </div></div>`;
+}
+let placaT = null, placaDiaRender = "";
+function vPlaca(){
+  $("#view").innerHTML = `
+    <div class="placa-h">
+      <div><h1>Placa da CIPA</h1><p class="dim small">Dias sem acidentes com afastamento, atualizados em tempo real a partir das CATs do Sistema SST.</p></div>
+      <button class="btn" id="placaCheia">⛶ Placa em tela cheia</button>
+    </div>
+    <section class="placa-palco" id="placaPalco"></section>`;
+  $("#placaCheia").onclick = () => alternarTelaCheia($("#placaPalco"));
+  upPlaca();
+  clearInterval(placaT);
+  placaT = setInterval(() => { if (rota() !== "placa" || !$("#placaPalco")) return clearInterval(placaT); if (dayKey() !== placaDiaRender) upPlaca(); }, 60000);
+}
+function upPlaca(){
+  const el = $("#placaPalco"); if (!el) return;
+  placaDiaRender = dayKey();
+  if (!S.sstOk){
+    el.innerHTML = `<div class="placa-vazio dim">${S.sstErr ? "Sem conexão com o Sistema SST. A placa aparece assim que a conexão voltar." : "Carregando a placa do Sistema SST…"}</div>`;
+    return;
+  }
+  const d = calcPlaca();
+  el.innerHTML = placaHtml(d) + (d.novoRecorde ? `<div class="placa-recorde">🏆 Novo recorde! Estamos no maior período sem acidentes com afastamento.</div>` : "");
+}
 
 /* ============================================================
    PORTARIA — página inicial do vigilante
