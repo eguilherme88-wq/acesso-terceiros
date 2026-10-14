@@ -82,7 +82,7 @@ a.btn{text-decoration:none;display:inline-flex;align-items:center;justify-conten
 .btn.bad{background:var(--bad);color:#fff}
 .btn.ok{background:var(--ok);color:#fff}
 .btn.sm{padding:6px 11px;font-size:14px}
-input[type=text],input[type=search],input[type=password],input[type=date],input[type=url],select,textarea{
+input[type=text],input[type=search],input[type=password],input[type=date],input[type=url],input[type=tel],select,textarea{
   background:var(--base);border:1px solid var(--line);border-radius:7px;padding:8px 11px;width:100%}
 .in-sm{max-width:260px}
 label{display:flex;flex-direction:column;gap:5px;font-weight:500}
@@ -231,9 +231,18 @@ tr:last-child td{border-bottom:0}
 .nav a{display:inline-flex;align-items:center}
 
 /* Topo em telas médias: textos secundários viram só ícone para caber numa linha */
-@media (max-width:1380px) and (min-width:761px){
+@media (max-width:1640px) and (min-width:761px){
   #telaCheia .nl-x{display:none}
   .conn{font-size:0;gap:0} .conn::before{width:11px;height:11px}
+}
+@media (max-width:1380px) and (min-width:761px){
+  #sairSistema .nl-x{display:none}
+}
+@media (max-width:1320px) and (min-width:761px){
+  #evacBtn .nl-x{display:none}
+}
+@media (max-width:1060px) and (min-width:761px){
+  .top-r{gap:6px} .clock{font-size:22px}
 }
 @media (max-width:1060px) and (min-width:761px){
   .nav a{padding:7px 9px} .top{gap:10px}
@@ -346,6 +355,63 @@ tr:last-child td{border-bottom:0}
 .placa-chamada{flex:1;color:#fff;font-size:3.6cqw;font-weight:900;letter-spacing:.05em;line-height:1.15;text-align:center;text-wrap:balance;text-shadow:0 .2cqw .3cqw rgba(0,0,0,.18)}
 .placa-frase{text-align:center;font-family:Georgia,"Times New Roman",serif;font-style:italic;font-weight:700;text-transform:none;font-size:1.9cqw;color:#111827}
 @media (max-width:760px){.placa-palco{padding:8px}.placa-palco .placa-cipa{max-width:100%}}
+/* ---------- Evacuação de emergência ---------- */
+.evac-btn{background:var(--bad);color:#fff;display:inline-flex;align-items:center;gap:6px}
+.evac-btn svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.evac-btn.ativa{animation:pulse 1.2s ease-in-out infinite}
+.evacbar{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;padding:9px 16px 9px 42px;background:var(--bad);color:#fff;font-weight:600;position:relative}
+.evacbar:empty{display:none}
+.evacbar::before{content:"";position:absolute;left:0;top:0;bottom:0;width:26px;background:repeating-linear-gradient(-45deg,#F5B700 0 10px,#1B1D1B 10px 20px)}
+.evacbar .btn{background:#fff;color:#8E1F10}
+.ev-head{position:relative;overflow:hidden;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:16px;align-items:center;
+  background:var(--bad);color:#fff;border-radius:12px;padding:18px 22px 18px 48px;margin-bottom:14px}
+.ev-head::before{content:"";position:absolute;left:0;top:0;bottom:0;width:26px;background:repeating-linear-gradient(-45deg,#F5B700 0 12px,#1B1D1B 12px 24px)}
+.ev-head h1{font-size:clamp(28px,4vw,46px);font-weight:700}
+.ev-head .meta{margin-top:6px;max-width:72ch}
+.ev-tempo{text-align:right}
+.ev-tempo b{display:block;font-family:var(--display);font-size:clamp(36px,5vw,60px);font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
+.ev-cont{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:14px}
+.ev-cont > div{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 16px}
+.ev-cont b{display:block;font-family:var(--display);font-size:clamp(34px,5vw,56px);font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
+.ev-cont .falta{border-color:var(--bad)} .ev-cont .falta b{color:var(--bad)}
+.ev-cont .falta.zero{border-color:var(--ok)} .ev-cont .falta.zero b,.ev-cont .ok b{color:var(--ok)}
+.rol{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:center;padding:10px 16px;border-bottom:1px solid var(--line)}
+.rol:last-child{border-bottom:0}
+.rol .nm{font-weight:600;font-size:17px}
+.rol.ok{background:color-mix(in srgb,var(--ok) 9%,transparent)}
+.rol-btn{min-width:180px;min-height:50px;padding:10px 16px;border-radius:10px;border:2px solid var(--yellow);background:transparent;color:var(--ink);font-weight:600;font-size:16px;cursor:pointer}
+.rol-btn:hover{background:color-mix(in srgb,var(--yellow) 14%,transparent)}
+.rol-btn[aria-pressed="true"]{background:var(--ok);border-color:var(--ok);color:#fff}
+.rol-btn:disabled{opacity:.6;cursor:progress}
+.ev-acoes{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;margin:14px 0 10px}
+.ev-off{max-width:660px;margin:40px auto;padding:28px;display:flex;flex-direction:column;gap:14px;align-items:flex-start}
+.ev-off .btn.bad{font-size:18px;padding:14px 24px}
+/* ---------- Visitantes e etiqueta ---------- */
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.seg label{position:relative;flex-direction:row;cursor:pointer}
+.seg input{position:absolute;opacity:0;pointer-events:none}
+.seg span{flex:1;text-align:center;padding:10px;border:1px solid var(--line);border-radius:8px;font-weight:600}
+.seg input:checked + span{background:var(--yellow);color:var(--yellow-ink);border-color:var(--yellow)}
+.seg input:focus-visible + span{outline:3px solid var(--yellow);outline-offset:2px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pes .acts{justify-content:flex-end}
+.etq-wrap{display:flex;justify-content:center;align-items:center;padding:18px;background:var(--panel2);border:1px dashed var(--line);border-radius:10px;overflow:auto}
+.etq-wrap .etq{box-shadow:0 2px 10px rgba(0,0,0,.25);flex:none}
+@media (max-width:760px){
+  #evacBtn{padding:8px 10px;min-width:40px;min-height:40px}
+  .ev-head{grid-template-columns:1fr;padding:14px 14px 14px 30px}
+  .ev-head::before{width:14px}
+  .ev-tempo{text-align:left}
+  .ev-cont{gap:6px} .ev-cont > div{padding:10px}
+  .rol{grid-template-columns:1fr;padding:12px}
+  .rol-btn{width:100%}
+  .ev-acoes .btn{flex:1 1 auto}
+  .ev-off{margin:16px auto;padding:20px}
+  .grid2{grid-template-columns:1fr}
+  .evacbar{padding-left:30px} .evacbar::before{width:16px}
+  .etq-wrap{padding:10px} .etq-wrap .etq{zoom:.8}
+}
+@media (max-width:480px){ #telaCheia{display:none!important} }
 </style>
 </head>
 <body>
@@ -360,12 +426,14 @@ tr:last-child td{border-bottom:0}
   <div class="top-r">
     <span id="conn" class="conn">Conectando ao SST…</span>
     <span id="clock" class="clock"></span>
+    <button id="evacBtn" class="btn sm evac-btn" title="Evacuação de emergência" aria-label="Evacuação de emergência"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 18v-5a5 5 0 0 1 10 0v5"/><path d="M5 21h14v-3H5z"/><path d="M12 3v2"/><path d="M4.5 6.5l1.4 1.4"/><path d="M19.5 6.5l-1.4 1.4"/></svg><span class="nl-x">Evacuação</span></button>
     <button id="telaCheia" class="btn ghost sm" title="Tela cheia (F11)" aria-label="Tela cheia">⛶ <span class="nl-x">Tela cheia</span></button>
     <button id="tema" class="btn ghost sm" aria-label="Alternar tema claro/escuro">◐</button>
     <button id="sairSistema" class="btn ghost sm sair-btn" aria-label="Sair do sistema" title="Sair do sistema"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3"/><path d="M10 17l-5-5 5-5"/><path d="M5 12h11"/></svg><span class="nl-x">Sair</span></button>
   </div>
 </header>
 <div id="licBar" class="licbar" role="status"></div>
+<div id="evacBar" class="evacbar" role="alert"></div>
 <main id="view"></main>
 <div id="modal"></div>
 
@@ -380,6 +448,9 @@ import { getFirestore, doc, getDoc, onSnapshot, runTransaction, deleteDoc, setDo
      sst_erp_state/portaria_cfg          restrições, digitais, regras
      sst_erp_state/portaria_presenca     quem está na planta agora
      sst_erp_state/portaria_mov_AAAA-MM-DD  registros do dia
+     sst_erp_state/portaria_evacuacao   evacuação em andamento
+     sst_erp_state/portaria_evac_<id>   evacuações encerradas
+     sst_erp_state/portaria_visitantes  visitantes já atendidos
    ============================================================ */
 const firebaseConfig = {
   apiKey: "AIzaSyCNBULMuGq6-QjnhKmyzeBRvKy1euFcmTQ",
@@ -395,6 +466,8 @@ const REF_SST = doc(db, COL, "main");
 const REF_CFG = doc(db, COL, "portaria_cfg");
 const REF_PRES = doc(db, COL, "portaria_presenca");
 const refDia = k => doc(db, COL, "portaria_mov_" + k);
+const REF_EVAC = doc(db, COL, "portaria_evacuacao");   // evacuação em andamento (lista de conferência)
+const REF_VIS = doc(db, COL, "portaria_visitantes");   // cadastro de visitantes já atendidos
 
 /* ---------- utilitários ---------- */
 const $ = (s, r = document) => r.querySelector(s);
@@ -424,10 +497,10 @@ const REGRAS_TXT = {
 };
 const S = {
   sstOk:false, sstErr:"", empresas:[], funcs:[], integ:[], users:[],
-  cfg:{ biometria:{}, restricoes:[], liberacoes:[], vigilantes:[], regras:{...REGRAS_PADRAO} }, cfgOk:false,
+  cfg:{ biometria:{}, restricoes:[], liberacoes:[], vigilantes:[], limpezas:[], regras:{...REGRAS_PADRAO}, emergencia:{ ponto:"" }, evacuacoes:[] }, cfgOk:false, evac:null,
   pres:{}, hoje:[], dia:""
 };
-const dev = Object.assign({ provider:"webauthn", localUrl:"http://localhost:5050", terminal:"Portaria principal", vigilante:"", auto:true }, lsGet("portaria_dispositivo", {}));
+const dev = Object.assign({ provider:"webauthn", localUrl:"http://localhost:5050", terminal:"Portaria principal", vigilante:"", auto:true, etiqueta:"100x60" }, lsGet("portaria_dispositivo", {}));
 const salvarDev = () => lsSet("portaria_dispositivo", dev);
 
 const empresaById = id => S.empresas.find(e => e.id === id);
@@ -445,7 +518,8 @@ const sha = async t => [...new Uint8Array(await crypto.subtle.digest("SHA-256", 
 const vigilantesAtivos = () => S.cfg.vigilantes.filter(v => v.ativo !== false).sort((a,b) => String(a.nome).localeCompare(String(b.nome), "pt-BR"));
 let plantao = lsGet("portaria_plantao", null);
 const lerCfg = d => ({ biometria: d.biometria || {}, restricoes: d.restricoes || [], liberacoes: d.liberacoes || [],
-  vigilantes: d.vigilantes || [], limpezas: d.limpezas || [], regras: {...REGRAS_PADRAO, ...(d.regras || {})} });
+  vigilantes: d.vigilantes || [], limpezas: d.limpezas || [], regras: {...REGRAS_PADRAO, ...(d.regras || {})},
+  emergencia: { ponto: "", ...(d.emergencia || {}) }, evacuacoes: d.evacuacoes || [] });
 const vale = r => r.ativa && (!r.ate || r.ate >= dayKey());
 const liberacoesAtivas = () => S.cfg.liberacoes.filter(vale);
 function liberacoesDe(f){
@@ -614,10 +688,11 @@ async function registrar(f, metodo, opts = {}){
   if (!licenca().ok) throw new Error(licenca().motivo);
   const av = avaliar(f), emp = empresaById(f.empresaId), k = dayKey(); let res;
   await runTransaction(db, async tx => {
-    const ds = await tx.get(refDia(k)), ps = await tx.get(REF_PRES);
+    const ds = await tx.get(refDia(k)), ps = await tx.get(REF_PRES), es = await tx.get(REF_EVAC);
     const eventos = ds.exists() ? (ds.data().eventos || []) : [];
     const pessoas = ps.exists() ? (ps.data().pessoas || {}) : {};
     const dentro = pessoas[f.id], agora = Date.now();
+    if (!dentro && es.exists() && es.data().ativa) throw new Error("Evacuação de emergência em andamento: entradas suspensas.");
     if (dentro && agora - dentro.ts < 60000 && !opts.forcar){ res = { duplicado:true, desde: dentro.ts, nome: f.nome, funcId: f.id }; return; }
     let tipo = opts.forcar || (dentro ? "saida" : "entrada");
     if (tipo === "entrada" && !av.ok) tipo = "negado";
@@ -625,7 +700,7 @@ async function registrar(f, metodo, opts = {}){
       empresa: emp?.razaoSocial || "", funcao: f.funcao || "", metodo, terminal: dev.terminal || "",
       operador: opts.operador || "", obs: opts.obs || "", motivos: tipo === "entrada" ? [] : av.motivos,
       excecao: tipo === "entrada" && av.liberado ? av.liberacoes.map(l => `${l.motivo} (liberado por ${l.por}${l.ate ? ", até " + fmtData(l.ate) : ""})`).join("; ") : "" };
-    if (tipo === "saida"){ ev.entradaTs = dentro?.ts || null; delete pessoas[f.id]; }
+    if (tipo === "saida"){ ev.entradaTs = dentro?.ts || null; delete pessoas[f.id]; evacSaida(tx, es, f.id, agora); }
     if (tipo === "entrada") pessoas[f.id] = { ts: agora, nome: ev.nome, cpf: ev.cpf, empresa: ev.empresa, empresaId: ev.empresaId, funcao: ev.funcao, metodo };
     eventos.push(ev);
     tx.set(refDia(k), clean({ eventos, atualizadoEm: agora }));
@@ -739,7 +814,8 @@ function toast(msg){
 const TIPO = {
   entrada: ["Entrada", "ok"], saida: ["Saída", "info"], negado: ["Não autorizado", "bad"], nao_identificado: ["Não reconhecida", "warn"]
 };
-const METODO = { digital:"Digital", manual:"Manual (vigilante)", teste:"Teste" };
+const METODO = { digital:"Digital", manual:"Manual (vigilante)", teste:"Teste", visitante:"Cadastro na portaria" };
+const CAT = { visitante:"Visitante", eventual:"Terceiro eventual", terceiro:"Terceiro", adicionado:"Incluído na conferência" };
 
 /* ============================================================
    ROTAS
@@ -748,15 +824,16 @@ const rota = () => (location.hash.replace("#/","") || "portaria").split("?")[0];
 function navegar(){
   const r = rota();
   $$(".nav a").forEach(a => a.dataset.r === r ? a.setAttribute("aria-current","page") : a.removeAttribute("aria-current"));
-  fecharModal(); clearTimeout(termT); pararLeitura();
+  fecharModal(); clearTimeout(termT); pararLeitura(); upEvacBar();
   if (S.sstOk && !licenca().ok) return vBloqueado();
-  if (r === "terminal") vTerminal(); else if (r === "sst") vSST(); else if (r === "placa") vPlaca(); else vPortaria();
+  if (r === "terminal") vTerminal(); else if (r === "sst") vSST(); else if (r === "placa") vPlaca(); else if (r === "evacuacao") vEvac(); else vPortaria();
 }
 function atualizar(){
   const r = rota();
   if (r === "portaria" && $("#pres")) upPortaria();
   else if (r === "sst" && $("#sstBody")) upSST();
   else if (r === "placa" && $("#placaPalco")) upPlaca();
+  else if (r === "evacuacao" && $("#evInativa")) vEvacInativa();
   else if (r === "terminal" && $("#tCarregando") && S.sstOk && estadoTerm === "idle") termIdle();
 }
 window.addEventListener("hashchange", navegar);
@@ -849,14 +926,15 @@ function vPortaria(){
     <div class="cols">
       <section class="card">
         <div class="card-h"><h2>Na planta agora</h2>
-          <input type="search" id="qPres" class="in-sm" placeholder="Buscar nome ou empresa" aria-label="Buscar pessoas na planta">
-          <button class="btn" id="btnManual">Registro manual</button></div>
+          <input type="search" id="qPres" class="in-sm" placeholder="Buscar nome, empresa ou etiqueta" aria-label="Buscar pessoas na planta">
+          <button class="btn" id="btnVis">Cadastrar visitante</button>
+          <button class="btn ghost" id="btnManual">Registro manual</button></div>
         <div id="pres"></div>
       </section>
       <section class="card">
         <div class="card-h"><h2>Movimento de hoje</h2><button class="btn ghost sm" id="feedPdf">Gerar PDF</button>
           <div class="chips" id="chips">
-            ${[["todos","Todos"],["entrada","Entradas"],["saida","Saídas"],["negado","Não autorizados"]].map(([v,t]) => `<button class="chip" data-f="${v}" aria-pressed="${filtroFeed===v}">${t}</button>`).join("")}
+            ${[["todos","Todos"],["entrada","Entradas"],["saida","Saídas"],["negado","Não autorizados"],["visit","Visitantes"]].map(([v,t]) => `<button class="chip" data-f="${v}" aria-pressed="${filtroFeed===v}">${t}</button>`).join("")}
           </div></div>
         <div class="feed" id="feed"></div>
       </section>
@@ -864,6 +942,7 @@ function vPortaria(){
   $("#qPres").oninput = upPresenca;
   $("#feedPdf").onclick = () => modalPdf({ de: dayKey(), ate: dayKey() });
   $("#btnManual").onclick = () => exigirPlantao(() => modalManual());
+  $("#btnVis").onclick = () => evacAtiva() ? toast("Evacuação em andamento: entradas suspensas.") : exigirPlantao(() => modalVisitante());
   $("#chips").onclick = e => { const b = e.target.closest("[data-f]"); if (!b) return; filtroFeed = b.dataset.f; $$(".chip").forEach(c => c.setAttribute("aria-pressed", c === b)); upFeed(); };
   upPortaria();
 }
@@ -925,7 +1004,7 @@ function upBanner(){
   if (pend.length){
     const e = pend[pend.length - 1];
     el.className = "banner bad" + (pulsar ? " pulse" : ""); pulsar = false;
-    el.innerHTML = `${e.funcId ? avatar(e.funcId, e.nome, "av-lg") : `<div class="ico" aria-hidden="true">!</div>`}
+    el.innerHTML = `${e.funcId || e.visId ? avatar(e.funcId || e.visId, e.nome, "av-lg") : `<div class="ico" aria-hidden="true">!</div>`}
       <div><div class="big">Terceiro não autorizado</div>
         <div class="who">${esc(e.nome)} <span style="font-weight:400">— ${esc(e.empresa || "empresa não informada")}, às ${hhmm(e.ts)}</span></div>
         <div class="why">${(e.motivos || []).map(esc).join("<br>")}${pend.length > 1 ? `<br><strong>Mais ${pend.length - 1} alerta(s) sem confirmação.</strong>` : ""}</div></div>
@@ -940,7 +1019,7 @@ function upBanner(){
     const [rot, c0] = TIPO[e.tipo] || ["Registro","info"];
     const cls = c0 === "bad" ? "warn" : c0;
     el.className = "banner " + cls;
-    el.innerHTML = `${e.funcId ? avatar(e.funcId, e.nome, "av-lg") : `<div class="ico" aria-hidden="true">!</div>`}
+    el.innerHTML = `${e.funcId || e.visId ? avatar(e.funcId || e.visId, e.nome, "av-lg") : `<div class="ico" aria-hidden="true">!</div>`}
       <div><div class="dim small">Último registro, às ${hhmm(e.ts)}${e.ciente ? `, ciente de ${esc(e.ciente.por)}` : ""}</div><div class="big">${esc(rot)}</div>
       <div class="who">${esc(e.nome)}${e.empresa ? ` <span class="dim" style="font-weight:400">— ${esc(e.empresa)}</span>` : ""}</div></div>`;
   } else {
@@ -952,7 +1031,7 @@ function upBanner(){
 function upStats(){
   const c = t => S.hoje.filter(e => e.tipo === t).length;
   $("#stats").innerHTML = `
-    <div class="stat"><b>${Object.keys(S.pres).length}</b><span>na planta</span></div>
+    <div class="stat"><b>${Object.keys(S.pres).length}</b><span>na planta${(n => n ? ` (${n} com etiqueta)` : "")(Object.values(S.pres).filter(p => p.categoria).length)}</span></div>
     <div class="stat"><b>${c("entrada")}</b><span>entradas hoje</span></div>
     <div class="stat"><b>${c("saida")}</b><span>saídas hoje</span></div>
     <div class="stat ${c("negado") ? "bad" : ""}"><b>${c("negado")}</b><span>não autorizados hoje</span></div>
@@ -963,10 +1042,11 @@ function upPresenca(){
   const el = $("#pres"); if (!el) return;
   const q = norm($("#qPres")?.value);
   const lista = Object.entries(S.pres).map(([id, p]) => ({ id, ...p }))
-    .filter(p => !q || norm(p.nome + " " + p.empresa + " " + p.cpf).includes(q))
+    .filter(p => !q || norm([p.nome, p.empresa, p.cpf, p.etiqueta, p.visitando].join(" ")).includes(q))
     .sort((a, b) => b.ts - a.ts);
-  if (!lista.length){ el.innerHTML = `<div class="empty">${q ? "Ninguém encontrado com essa busca." : "Nenhum terceiro na planta no momento."}</div>`; return; }
+  if (!lista.length){ el.innerHTML = `<div class="empty">${q ? "Ninguém encontrado com essa busca." : "Ninguém na planta no momento."}</div>`; return; }
   el.innerHTML = lista.map(p => {
+    if (p.categoria) return linhaVisitante(p);
     const f = funcById(p.id); const av = f ? avaliar(f) : null;
     const alerta = f && !av.ok;
     return `<div class="pes ${alerta ? "alerta" : ""}">
@@ -977,12 +1057,13 @@ function upPresenca(){
       <button class="btn ghost sm" data-saida="${esc(p.id)}">Registrar saída</button></div>`;
   }).join("");
   $$("[data-saida]", el).forEach(b => b.onclick = () => exigirPlantao(() => modalManual(b.dataset.saida)));
+  ligarVisitantes(el);
 }
 function linhaEvento(e){
   const [rot, cls] = TIPO[e.tipo] || ["Registro","mute"];
   return `<div class="ev ${e.tipo}"><time>${hhmm(e.ts)}</time><div>
-    <div class="l1">${e.funcId ? avatar(e.funcId, e.nome, "av-sm") : ""}<span class="tag ${e.tipo === "negado" ? "solid-bad" : cls}">${rot}</span><span class="nm">${esc(e.nome)}</span></div>
-    <div class="dim small">${esc(e.empresa || "")}${e.empresa ? ", " : ""}${esc(METODO[e.metodo] || e.metodo || "")}${e.operador ? ` por ${esc(e.operador)}` : ""}${e.tipo === "saida" && e.entradaTs ? `, permaneceu ${dur(e.ts - e.entradaTs)}` : ""}</div>
+    <div class="l1">${e.funcId ? avatar(e.funcId, e.nome, "av-sm") : ""}<span class="tag ${e.tipo === "negado" ? "solid-bad" : cls}">${rot}</span><span class="nm">${esc(e.nome)}</span>${e.categoria ? `<span class="tag mute">${esc(CAT[e.categoria] || "")}${e.etiqueta ? " " + esc(e.etiqueta) : ""}</span>` : ""}</div>
+    <div class="dim small">${esc(e.empresa || "")}${e.empresa ? ", " : ""}${e.visitando ? `${e.categoria === "eventual" ? "responsável" : "visitando"} ${esc(e.visitando)}, ` : ""}${esc(METODO[e.metodo] || e.metodo || "")}${e.operador ? ` por ${esc(e.operador)}` : ""}${e.tipo === "saida" && e.entradaTs ? `, permaneceu ${dur(e.ts - e.entradaTs)}` : ""}</div>
     ${e.motivos?.length && e.tipo !== "entrada" ? `<div class="why ${e.tipo === "negado" ? "bad" : ""}">${e.motivos.map(esc).join("; ")}</div>` : ""}
     ${e.excecao ? `<div class="why" style="color:var(--info)">Entrada por liberação especial: ${esc(e.excecao)}</div>` : ""}
     ${e.obs ? `<div class="why">Obs.: ${esc(e.obs)}</div>` : ""}
@@ -990,7 +1071,7 @@ function linhaEvento(e){
 }
 function upFeed(){
   const el = $("#feed"); if (!el) return;
-  const evs = S.hoje.filter(e => filtroFeed === "todos" || e.tipo === filtroFeed || (filtroFeed === "negado" && e.tipo === "nao_identificado")).slice().reverse();
+  const evs = S.hoje.filter(e => filtroFeed === "todos" || (filtroFeed === "visit" ? !!e.categoria : e.tipo === filtroFeed || (filtroFeed === "negado" && e.tipo === "nao_identificado"))).slice().reverse();
   el.innerHTML = evs.length ? evs.map(linhaEvento).join("") : `<div class="empty">Nenhum registro ${filtroFeed === "todos" ? "hoje" : "nesse filtro"}.</div>`;
 }
 
@@ -1067,12 +1148,13 @@ let leituraAtiva = false, leituraCtl = null, rearmeT = null, pausada = false;
 function pararLeitura(){ clearTimeout(rearmeT); try{ leituraCtl?.abort(); }catch{} leituraCtl = null; }
 const temDigitalWebauthn = () => Object.values(S.cfg.biometria).some(l => l.some(c => c.provider === "webauthn"));
 function podeAuto(){
-  return dev.auto && dev.provider !== "simulacao" && S.sstOk && licenca().ok && S.cfgOk && rota() === "terminal" && estadoTerm === "idle" && !pausada
+  return dev.auto && dev.provider !== "simulacao" && !evacAtiva() && S.sstOk && licenca().ok && S.cfgOk && rota() === "terminal" && estadoTerm === "idle" && !pausada
     && (dev.provider !== "webauthn" || (temDigitalWebauthn() && Bio.webauthnOk())) && !$(".ov");
 }
 function termIdle(msg){
   estadoTerm = "idle"; const b = $("#tbody"); if (!b) return;
   pararLeitura();
+  if (evacAtiva()) return termEvacuacao(b);
   const auto = dev.auto && dev.provider !== "simulacao";
   b.className = "tbody"; b.onclick = null; b.removeAttribute("aria-live");
   b.innerHTML = `<button class="fp" id="fpBtn" aria-label="Ler digital">${FP_SVG}</button>
@@ -1200,7 +1282,7 @@ function vSST(){
   $("#view").innerHTML = `
     <div class="sst-head"><div><h1>Segurança do Trabalho</h1><p class="dim">Conectado como ${esc(u.name || u.username)}. Cadastros de empresas e trabalhadores vêm do Sistema SST.</p></div>
       <button class="btn ghost sm" id="sair">Trocar usuário</button></div>
-    <nav class="tabs" role="tablist">${[["trab","Trabalhadores"],["emp","Empresas"],["vig","Vigilantes"],["regras","Regras de bloqueio"],["hist","Histórico"],["disp","Este dispositivo"]]
+    <nav class="tabs" role="tablist">${[["trab","Trabalhadores"],["emp","Empresas"],["vig","Vigilantes"],["emerg","Emergência"],["regras","Regras de bloqueio"],["hist","Histórico"],["disp","Este dispositivo"]]
       .map(([k,t]) => `<button role="tab" data-t="${k}" aria-selected="${aba===k}">${t}</button>`).join("")}</nav>
     <div id="sstBody"></div>`;
   $("#sair").onclick = () => { sessionStorage.removeItem("portaria_user"); vSST(); };
@@ -1257,6 +1339,8 @@ function montarAba(){
       <p class="dim" style="padding:12px 16px 0">Cada vigilante inicia o plantão na tela da Portaria com o próprio PIN. Registros manuais e confirmações de alerta ficam no nome dele.</p>
       <div class="tbl" id="vlist"></div></section>`;
     $("#vnovo").onclick = () => modalVigilante();
+  } else if (aba === "emerg"){
+    montarEmergencia(b);
   } else if (aba === "disp"){
     vDisp(); return;
   }
@@ -1268,6 +1352,7 @@ function upSST(){
   if (aba === "regras" && $("#rlist")) upRegras();
   if (aba === "vig" && $("#vlist")) upVig();
   if (aba === "hist" && $("#rhist")) upRestHist();
+  if (aba === "emerg" && $("#evhist")) upEvHist();
 }
 function situacao(f){
   const av = avaliar(f);
@@ -1481,16 +1566,16 @@ function desenharHist(){
   const l = histFiltrado();
   $("#hlist").innerHTML = l.length ? `<table><thead><tr><th>Hora</th><th>Tipo</th><th>Terceiro</th><th>Empresa</th><th>Forma</th><th>Detalhes</th></tr></thead><tbody>
     ${l.map(e => `<tr><td>${hhmm(e.ts)}</td><td><span class="tag ${(TIPO[e.tipo]||[])[1]||"mute"}">${(TIPO[e.tipo]||[e.tipo])[0]}</span></td>
-      <td>${esc(e.nome)}${e.cpf ? `<div class="dim small">${esc(fmtCpf(e.cpf))}</div>` : ""}</td><td>${esc(e.empresa || "—")}</td>
+      <td>${esc(e.nome)}${e.cpf ? `<div class="dim small">${esc(fmtCpf(e.cpf))}</div>` : ""}${e.categoria ? `<div class="dim small">${esc(CAT[e.categoria] || "")}${e.etiqueta ? ", etiqueta " + esc(e.etiqueta) : ""}</div>` : ""}</td><td>${esc(e.empresa || "—")}</td>
       <td>${esc(METODO[e.metodo] || e.metodo)}${e.operador ? `<div class="dim small">${esc(e.operador)}</div>` : ""}<div class="dim small">${esc(e.terminal || "")}</div></td>
-      <td class="small">${[...(e.motivos || []), e.excecao && "Liberação especial: " + e.excecao, e.obs, e.ciente && `Ciente: ${e.ciente.por} às ${hhmm(e.ciente.ts)}`].filter(Boolean).map(esc).join("<br>") || "—"}</td></tr>`).join("")}</tbody></table>`
+      <td class="small">${[...(e.motivos || []), e.excecao && "Liberação especial: " + e.excecao, e.visitando && (e.categoria === "eventual" ? "Responsável: " : "Visitando: ") + e.visitando + (e.setor ? ` (${e.setor})` : ""), e.motivo && "Motivo: " + e.motivo, e.obs, e.ciente && `Ciente: ${e.ciente.por} às ${hhmm(e.ciente.ts)}`].filter(Boolean).map(esc).join("<br>") || "—"}</td></tr>`).join("")}</tbody></table>`
     : `<div class="empty">Nenhum registro nessa data e filtro.</div>`;
 }
 function baixarCsv(){
   const l = histFiltrado().reverse();
   const c = v => `"${String(v ?? "").replace(/"/g, '""')}"`;
-  const linhas = [["Data","Hora","Tipo","Nome","CPF","Empresa","Função","Forma","Vigilante","Terminal","Motivos","Liberação especial","Observação","Ciente do vigilante"].map(c).join(";"),
-    ...l.map(e => [new Date(e.ts).toLocaleDateString("pt-BR"), hhmm(e.ts), (TIPO[e.tipo]||[e.tipo])[0], e.nome, fmtCpf(e.cpf), e.empresa, e.funcao, METODO[e.metodo] || e.metodo, e.operador, e.terminal, (e.motivos || []).join(" | "), e.excecao, e.obs, e.ciente ? `${e.ciente.por} ${hhmm(e.ciente.ts)}` : ""].map(c).join(";"))];
+  const linhas = [["Data","Hora","Tipo","Nome","CPF","Empresa","Função","Categoria","Etiqueta","Visitando / responsável","Forma","Vigilante","Terminal","Motivos","Liberação especial","Observação","Ciente do vigilante"].map(c).join(";"),
+    ...l.map(e => [new Date(e.ts).toLocaleDateString("pt-BR"), hhmm(e.ts), (TIPO[e.tipo]||[e.tipo])[0], e.nome, fmtCpf(e.cpf), e.empresa, e.funcao, CAT[e.categoria] || "Terceiro", e.etiqueta, e.visitando, METODO[e.metodo] || e.metodo, e.operador, e.terminal, (e.motivos || []).join(" | "), e.excecao, e.obs, e.ciente ? `${e.ciente.por} ${hhmm(e.ciente.ts)}` : ""].map(c).join(";"))];
   const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob(["\ufeff" + linhas.join("\r\n")], { type:"text/csv;charset=utf-8" }));
   a.download = `portaria_${$("#hd").value}.csv`; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 2000);
 }
@@ -1591,6 +1676,7 @@ function vDisp(){
   $("#sstBody").innerHTML = `<section class="card"><div class="card-h"><h2>Leitor deste dispositivo</h2></div>
     <p class="dim" style="padding:12px 16px 0">Configuração salva só neste navegador. Ajuste em cada computador ou tablet usado como terminal.</p>
     <label style="padding:12px 16px">Nome deste terminal<input type="text" id="dn" value="${esc(dev.terminal)}" placeholder="Ex.: Portaria 1"></label>
+    <label style="padding:0 16px 12px">Etiqueta de visitante impressa neste dispositivo<select id="detq">${Object.entries(ETQ_FMT).map(([k, f]) => `<option value="${k}" ${dev.etiqueta === k ? "selected" : ""}>${f.nome}</option>`).join("")}</select></label>
     ${[["webauthn","Leitor de digital do dispositivo","Leitor embutido do notebook ou tablet (Windows Hello, Android) ou chave de segurança FIDO2 com digital. Não precisa de programa extra."],
        ["local","Leitor biométrico externo (serviço local)","Leitor USB de catraca/ponto que identifica a pessoa só pela digital (1 para N). Precisa de um serviço local do fabricante que responda em /cadastrar e /identificar. É a opção indicada para leitura sem toque."],
        ["simulacao","Modo de teste","Sem leitor. Você escolhe quem está registrando. Use só para treinar e testar."]]
@@ -1601,7 +1687,7 @@ function vDisp(){
     <p id="dmsg" style="padding:0 16px 16px"></p></section>`;
   const sync = () => $("#durlw").style.display = $("[name=prov]:checked").value === "local" ? "" : "none"; sync();
   $$("[name=prov]").forEach(r => r.onchange = sync);
-  $("#dsave").onclick = () => { dev.provider = $("[name=prov]:checked").value; dev.terminal = $("#dn").value.trim() || "Terminal"; dev.localUrl = $("#durl").value.trim(); dev.auto = $("#dauto").checked; salvarDev(); toast("Configuração do dispositivo salva."); };
+  $("#dsave").onclick = () => { dev.provider = $("[name=prov]:checked").value; dev.terminal = $("#dn").value.trim() || "Terminal"; dev.localUrl = $("#durl").value.trim(); dev.auto = $("#dauto").checked; dev.etiqueta = $("#detq").value; salvarDev(); toast("Configuração do dispositivo salva."); };
   $("#dtest").onclick = async () => {
     const p = $("[name=prov]:checked").value, m = $("#dmsg");
     if (p === "simulacao"){ m.textContent = "Modo de teste não usa leitor."; return; }
@@ -1610,6 +1696,581 @@ function vDisp(){
     const emb = await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable?.().catch(() => false);
     m.textContent = emb ? "Leitor biométrico do aparelho disponível." : "Nenhum leitor embutido encontrado. Uma chave de segurança FIDO2 com digital ainda pode ser usada.";
   };
+}
+
+/* ============================================================
+   VISITANTES E TERCEIROS EVENTUAIS
+   Cadastro feito pelo vigilante na portaria. Gera uma etiqueta
+   adesiva para colar na roupa, em local visível.
+   ============================================================ */
+const docKey = s => norm(s).replace(/[^a-z0-9]/g, "");
+const pad3 = n => String(n).padStart(3, "0");
+/* A etiqueta fica à vista: o documento sai mascarado (LGPD). */
+const mascaraDoc = s => { const k = docKey(s); if (/^\d{11}$/.test(k)) return `***.${k.slice(3,6)}.${k.slice(6,9)}-**`; return k.length > 4 ? "•••" + String(s).trim().slice(-4) : String(s || ""); };
+const ETQ_FMT = {
+  "100x60": { w:100, h:60, nome:"100 × 60 mm (impressora térmica)" },
+  "100x50": { w:100, h:50, nome:"100 × 50 mm (impressora térmica)" },
+  "62x100": { w:62, h:100, nome:"62 × 100 mm (Brother QL, vertical)" }
+};
+const ETQ_CSS = `
+.etq{box-sizing:border-box;background:#fff;color:#000;font-family:Arial,Helvetica,sans-serif;display:flex;flex-direction:column;overflow:hidden;text-align:left;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.etq *{box-sizing:border-box}
+.etq-band{display:flex;align-items:center;justify-content:space-between;gap:2mm;background:#000;color:#fff;padding:1.8mm 3mm;font-weight:700;text-transform:uppercase;line-height:1}
+.etq-band .t{font-size:5.4mm;letter-spacing:.03em}
+.etq-band .n{font-size:4.6mm;font-family:"Arial Narrow",Arial,sans-serif;white-space:nowrap}
+.etq-band.eventual{background:repeating-linear-gradient(-45deg,#000 0 2mm,#fff 2mm 4mm)}
+.etq-band.eventual span{background:#000;padding:1mm 1.8mm;border-radius:.6mm}
+.etq-corpo{flex:1;min-height:0;padding:2mm 3mm 1.6mm;display:flex;flex-direction:column;gap:.9mm}
+.etq-nome{font-size:5.6mm;font-weight:700;line-height:1.05;text-transform:uppercase;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;word-break:break-word}
+.etq-l{font-size:3.1mm;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.etq-pe{margin-top:auto;display:flex;align-items:flex-end;justify-content:space-between;gap:3mm}
+.etq-data{font-size:3.3mm;font-weight:700;line-height:1.2}
+.etq-data span{display:block;font-weight:400;font-size:2.6mm}
+.etq-marca img{display:block;max-height:8mm;max-width:30mm;object-fit:contain}
+.etq-marca span{font-size:2.8mm;font-weight:700;text-transform:uppercase}
+.etq-aviso{border-top:.35mm solid #000;padding:1.1mm 3mm;font-size:2.4mm;line-height:1.25}
+.etq.baixa .etq-band{padding:1.3mm 3mm} .etq.baixa .etq-band .t{font-size:4.6mm} .etq.baixa .etq-band .n{font-size:4mm}
+.etq.baixa .etq-corpo{padding:1.4mm 3mm 1mm;gap:.5mm} .etq.baixa .etq-nome{font-size:4.8mm}
+.etq.baixa .etq-doc{display:none} .etq.baixa .etq-marca img{max-height:6mm}
+.etq.alta .etq-band{flex-direction:column;align-items:flex-start;gap:1.6mm;padding:2.6mm 3mm}
+.etq.alta .etq-nome{font-size:6.4mm;-webkit-line-clamp:3}
+.etq.alta .etq-l{white-space:normal}
+.etq.alta .etq-pe{flex-direction:column-reverse;align-items:flex-start;gap:2mm}`;
+document.head.insertAdjacentHTML("beforeend", `<style>${ETQ_CSS}</style>`);
+
+function etiquetaHtml(v){
+  const f = ETQ_FMT[dev.etiqueta] || ETQ_FMT["100x60"], cls = f.h < 55 ? "baixa" : f.h > f.w ? "alta" : "";
+  const emp = S.empresa || {}, nomeEmp = emp.nomeFantasia || emp.razaoSocial || "";
+  const marca = S.logoEmpresa ? `<img src="${esc(S.logoEmpresa)}" alt="">` : nomeEmp ? `<span>${esc(nomeEmp)}</span>` : "";
+  const ponto = S.cfg.emergencia?.ponto || "";
+  const quem = [v.visitando, v.setor].filter(Boolean).join(", ");
+  return `<div class="etq ${cls}" style="width:${f.w}mm;height:${f.h}mm">
+    <div class="etq-band ${v.categoria === "eventual" ? "eventual" : ""}"><span class="t">${esc(CAT[v.categoria] || "Visitante")}</span><span class="n">${esc(v.etiqueta || "")}</span></div>
+    <div class="etq-corpo">
+      <div class="etq-nome">${esc(v.nome)}</div>
+      ${v.empresa ? `<div class="etq-l"><b>Empresa:</b> ${esc(v.empresa)}</div>` : ""}
+      ${quem ? `<div class="etq-l"><b>${v.categoria === "eventual" ? "Responsável" : "Visitando"}:</b> ${esc(quem)}</div>` : ""}
+      ${v.cpf ? `<div class="etq-l etq-doc"><b>Doc.:</b> ${esc(mascaraDoc(v.cpf))}</div>` : ""}
+      <div class="etq-pe"><div class="etq-data">${new Date(v.ts).toLocaleDateString("pt-BR")}, entrada ${hhmm(v.ts)}<span>Válida somente nesta data</span></div><div class="etq-marca">${marca}</div></div>
+    </div>
+    <div class="etq-aviso">Use em local visível e devolva na saída. Em emergência, siga a brigada até o ponto de encontro${ponto ? `: ${esc(ponto)}` : ""}.</div>
+  </div>`;
+}
+/* Imprime só a etiqueta, no tamanho exato do papel, por um quadro oculto. */
+function imprimirEtiqueta(v){
+  const f = ETQ_FMT[dev.etiqueta] || ETQ_FMT["100x60"];
+  const ifr = document.createElement("iframe");
+  ifr.setAttribute("aria-hidden", "true"); ifr.tabIndex = -1;
+  ifr.style.cssText = "position:fixed;right:0;bottom:0;width:1px;height:1px;border:0;opacity:0;pointer-events:none";
+  document.body.appendChild(ifr);
+  const w = ifr.contentWindow, d = w.document;
+  d.open();
+  d.write(`<!DOCTYPE html><html lang="pt-BR"><head><meta charset="utf-8"><title>Etiqueta ${esc(v.etiqueta || "")}</title>
+    <style>@page{size:${f.w}mm ${f.h}mm;margin:0}html,body{margin:0;padding:0;background:#fff;width:${f.w}mm;height:${f.h}mm;overflow:hidden}${ETQ_CSS}</style></head><body>${etiquetaHtml(v)}</body></html>`);
+  d.close();
+  const remover = () => setTimeout(() => ifr.remove(), 1000);
+  w.onafterprint = remover; setTimeout(() => ifr.remove(), 120000);
+  Promise.all([...d.images].map(i => i.complete ? null : new Promise(r => { i.onload = i.onerror = r; })))
+    .then(() => setTimeout(() => { try{ w.focus(); w.print(); }catch(e){ toast("Não foi possível abrir a impressão: " + e.message); } }, 60));
+}
+function modalEtiqueta(v, nova){
+  abrirModal(`<h3>${nova ? "Entrada registrada" : `Etiqueta ${esc(v.etiqueta || "")}`}</h3>
+    ${nova ? `<p><strong>${esc(v.nome)}</strong> entrou às ${hhmm(v.ts)}. Imprima a etiqueta e peça para colar na roupa, em local visível.</p>` : ""}
+    <div class="etq-wrap" id="etqPrev">${etiquetaHtml(v)}</div>
+    <label>Tamanho da etiqueta<select id="etqFmt">${Object.entries(ETQ_FMT).map(([k, f]) => `<option value="${k}" ${dev.etiqueta === k ? "selected" : ""}>${f.nome}</option>`).join("")}</select></label>
+    <div class="row"><button class="btn ghost" id="etqF">Fechar</button><button class="btn" id="etqP">Imprimir etiqueta</button></div>`, ov => {
+    $("#etqFmt", ov).onchange = e => { dev.etiqueta = e.target.value; salvarDev(); $("#etqPrev", ov).innerHTML = etiquetaHtml(v); };
+    $("#etqF", ov).onclick = fecharModal;
+    $("#etqP", ov).onclick = () => imprimirEtiqueta(v);
+    setTimeout(() => $("#etqP", ov)?.focus(), 0);
+  });
+}
+
+function modalVisitante(){
+  let cad = {}, bloqueio = "", ov = null;
+  const ponto = S.cfg.emergencia?.ponto || "";
+  const TXT = {
+    visitante: ["Pessoa de fora que vem para reunião, visita ou entrega e não trabalha na planta.", "Pessoa visitada", "Motivo da visita", "Ex.: reunião comercial"],
+    eventual: ["Prestador sem cadastro no Sistema SST que vem uma vez ou por poucos dias. Para trabalho frequente, cadastre como terceiro no SST.", "Responsável na empresa", "Serviço a realizar", "Ex.: manutenção do ar-condicionado"]
+  };
+  const checar = () => {
+    if (!ov || !ov.isConnected) return;
+    const v = $("#vidoc", ov).value, k = docKey(v), av = $("#viaviso", ov); bloqueio = "";
+    if (k.length < 5){ av.innerHTML = ""; return; }
+    const t = /^\d{11}$/.test(k) ? S.funcs.find(f => dig(f.cpf) === k) : null;
+    if (t){
+      bloqueio = "terceiro";
+      const emp = empresaById(t.empresaId)?.razaoSocial;
+      av.innerHTML = `<div class="note" style="border-color:var(--bad)"><strong>Este CPF é de ${esc(t.nome)}</strong>, terceiro cadastrado no SST${emp ? ` (${esc(emp)})` : ""}. Registre pelo terminal ou pelo registro manual, para valerem as regras da Segurança do Trabalho.
+        <div style="margin-top:8px"><button class="btn sm" id="viman">Abrir registro manual</button></div></div>`;
+      $("#viman", ov).onclick = () => modalManual(t.id);
+      return;
+    }
+    const dentro = Object.values(S.pres).find(p => p.categoria && docKey(p.cpf) === k);
+    if (dentro){
+      bloqueio = "dentro";
+      av.innerHTML = `<div class="note" style="border-color:var(--warn)"><strong>${esc(dentro.nome)} já está na planta</strong> desde ${hhmm(dentro.ts)}${dentro.etiqueta ? `, etiqueta ${esc(dentro.etiqueta)}` : ""}.</div>`;
+      return;
+    }
+    const c = cad[k];
+    if (!c){ av.innerHTML = ""; return; }
+    const pre = (id, val) => { const i = $(id, ov); if (i && !i.value.trim() && val) i.value = val; };
+    pre("#vinome", c.nome); pre("#viemp", c.empresa); pre("#vitel", c.tel); pre("#viplaca", c.placa);
+    av.innerHTML = `<div class="note">Já esteve aqui ${c.visitas || 1} vez${(c.visitas || 1) === 1 ? "" : "es"}, a última em ${fmtData(dayKey(new Date(c.ultima)))}. Confira os dados preenchidos.</div>`;
+  };
+  getDoc(REF_VIS).then(sn => { cad = sn.exists() ? (sn.data().pessoas || {}) : {}; checar(); }).catch(() => {});
+  abrirModal(`<h3>Cadastrar entrada de visitante</h3>
+    <div class="seg" role="radiogroup" aria-label="Categoria">
+      <label><input type="radio" name="vicat" value="visitante" checked><span>Visitante</span></label>
+      <label><input type="radio" name="vicat" value="eventual"><span>Terceiro eventual</span></label></div>
+    <p class="dim small" id="vicatTxt">${TXT.visitante[0]}</p>
+    <label>CPF ou documento com foto<input type="text" id="vidoc" autocomplete="off" placeholder="CPF, RG ou passaporte"></label>
+    <div id="viaviso"></div>
+    <label>Nome completo<input type="text" id="vinome" autocomplete="off"></label>
+    <label>Empresa ou origem<input type="text" id="viemp" autocomplete="off" placeholder="Deixe em branco se for particular"></label>
+    <div class="grid2"><label><span id="viquemL">${TXT.visitante[1]}</span><input type="text" id="viquem" autocomplete="off"></label>
+      <label>Setor ou local<input type="text" id="visetor" autocomplete="off"></label></div>
+    <label><span id="vimotL">${TXT.visitante[2]}</span><input type="text" id="vimot" autocomplete="off" placeholder="${TXT.visitante[3]}"></label>
+    <div class="grid2"><label>Telefone (opcional)<input type="tel" id="vitel" autocomplete="off"></label>
+      <label>Placa do veículo (opcional)<input type="text" id="viplaca" autocomplete="off" autocapitalize="characters"></label></div>
+    <label class="rule" style="padding:0;border:0"><input type="checkbox" id="viori"><span>Recebeu as orientações de segurança e sabe onde fica o ponto de encontro${ponto ? ` (${esc(ponto)})` : ""}</span></label>
+    <p class="small dim">Registrado por ${esc(plantao.nome)} (vigilante de plantão).</p>
+    <p class="err" id="vierr"></p>
+    <div class="row"><button class="btn ghost" id="vic">Cancelar</button><button class="btn" id="viok">Registrar entrada e gerar etiqueta</button></div>`, o => {
+    ov = o;
+    $$("[name=vicat]", ov).forEach(r => r.onchange = () => { const t = TXT[r.value];
+      $("#vicatTxt", ov).textContent = t[0]; $("#viquemL", ov).textContent = t[1]; $("#vimotL", ov).textContent = t[2]; $("#vimot", ov).placeholder = t[3]; });
+    $("#vidoc", ov).oninput = checar;
+    $("#vic", ov).onclick = fecharModal;
+    $("#viok", ov).onclick = async () => {
+      checar();
+      const err = $("#vierr", ov), g = id => $(id, ov).value.trim(), btn = $("#viok", ov);
+      if (bloqueio === "terceiro"){ err.textContent = "Use o registro manual para terceiros cadastrados no SST."; return; }
+      if (bloqueio === "dentro"){ err.textContent = "Esta pessoa já está na planta. Registre a saída antes de uma nova entrada."; return; }
+      const d = { categoria: $("[name=vicat]:checked", ov).value, doc: g("#vidoc"), nome: g("#vinome"), empresa: g("#viemp"), visitando: g("#viquem"),
+        setor: g("#visetor"), motivo: g("#vimot"), tel: g("#vitel"), placa: g("#viplaca").toUpperCase(), orientado: $("#viori", ov).checked };
+      if (docKey(d.doc).length < 5){ err.textContent = "Informe o CPF ou outro documento com foto."; $("#vidoc", ov).focus(); return; }
+      if (d.nome.length < 3){ err.textContent = "Informe o nome completo."; $("#vinome", ov).focus(); return; }
+      if (!d.visitando){ err.textContent = d.categoria === "eventual" ? "Informe o responsável na empresa." : "Informe a pessoa visitada."; $("#viquem", ov).focus(); return; }
+      if (/^\d{11}$/.test(docKey(d.doc))) d.doc = fmtCpf(docKey(d.doc));
+      btn.disabled = true; err.textContent = "";
+      try{ const ev = await registrarVisitante(d); fecharModal(); modalEtiqueta(ev, true); }
+      catch(e){ err.textContent = e.message; btn.disabled = false; }
+    };
+    setTimeout(() => $("#vidoc", ov)?.focus(), 0);
+  });
+}
+async function registrarVisitante(d){
+  if (!licenca().ok) throw new Error(licenca().motivo);
+  const k = dayKey(); let ev;
+  await runTransaction(db, async tx => {
+    const ds = await tx.get(refDia(k)), ps = await tx.get(REF_PRES), es = await tx.get(REF_EVAC), vs = await tx.get(REF_VIS);
+    if (es.exists() && es.data().ativa) throw new Error("Evacuação de emergência em andamento: entradas suspensas.");
+    const eventos = ds.exists() ? (ds.data().eventos || []) : [];
+    const pessoas = ps.exists() ? (ps.data().pessoas || {}) : {};
+    const cad = vs.exists() ? (vs.data().pessoas || {}) : {};
+    const chave = docKey(d.doc);
+    const ja = Object.values(pessoas).find(p => p.categoria && docKey(p.cpf) === chave);
+    if (ja) throw new Error(`${ja.nome} já está na planta desde ${hhmm(ja.ts)}${ja.etiqueta ? ` (etiqueta ${ja.etiqueta})` : ""}.`);
+    const seq = eventos.filter(e => e.tipo === "entrada" && e.categoria === d.categoria).length + 1;
+    const agora = Date.now(), visId = "v_" + uid(), etiqueta = `${d.categoria === "eventual" ? "E" : "V"}-${pad3(seq)}`;
+    const base = { nome: d.nome, cpf: d.doc, empresa: d.empresa, empresaId: "", funcao: "", categoria: d.categoria, visitando: d.visitando,
+      setor: d.setor, motivo: d.motivo, tel: d.tel, placa: d.placa, orientado: d.orientado, etiqueta, metodo: "visitante" };
+    ev = { id: uid(), ts: agora, tipo: "entrada", visId, ...base, terminal: dev.terminal || "", operador: plantao?.nome || "", obs: "", motivos: [] };
+    eventos.push(ev);
+    pessoas[visId] = { ts: agora, ...base, operador: plantao?.nome || "" };
+    cad[chave] = { nome: d.nome, doc: d.doc, empresa: d.empresa, tel: d.tel, placa: d.placa, categoria: d.categoria, visitas: (cad[chave]?.visitas || 0) + 1, ultima: agora };
+    const ks = Object.keys(cad);
+    if (ks.length > 3000) ks.sort((a, b) => (cad[a].ultima || 0) - (cad[b].ultima || 0)).slice(0, ks.length - 3000).forEach(x => delete cad[x]);
+    tx.set(refDia(k), clean({ eventos, atualizadoEm: agora }));
+    tx.set(REF_PRES, clean({ pessoas, atualizadoEm: agora }));
+    tx.set(REF_VIS, clean({ pessoas: cad, atualizadoEm: agora }));
+  });
+  return ev;
+}
+async function saidaVisitante(pid){
+  if (!licenca().ok) throw new Error(licenca().motivo);
+  const k = dayKey(); let ev;
+  await runTransaction(db, async tx => {
+    const ds = await tx.get(refDia(k)), ps = await tx.get(REF_PRES), es = await tx.get(REF_EVAC);
+    const eventos = ds.exists() ? (ds.data().eventos || []) : [];
+    const pessoas = ps.exists() ? (ps.data().pessoas || {}) : {};
+    const p = pessoas[pid]; if (!p) throw new Error("Esta pessoa não consta mais na planta.");
+    const agora = Date.now();
+    ev = { id: uid(), ts: agora, tipo: "saida", visId: pid, nome: p.nome || "", cpf: p.cpf || "", empresa: p.empresa || "", empresaId: "", funcao: "",
+      categoria: p.categoria, visitando: p.visitando || "", setor: p.setor || "", etiqueta: p.etiqueta || "", metodo: "visitante",
+      terminal: dev.terminal || "", operador: plantao?.nome || "", obs: "", motivos: [], entradaTs: p.ts || null };
+    delete pessoas[pid]; eventos.push(ev);
+    tx.set(refDia(k), clean({ eventos, atualizadoEm: agora }));
+    tx.set(REF_PRES, clean({ pessoas, atualizadoEm: agora }));
+    evacSaida(tx, es, pid, agora);
+  });
+  return ev;
+}
+function linhaVisitante(p){
+  const vencida = dayKey(new Date(p.ts)) !== dayKey();
+  return `<div class="pes ${vencida ? "alerta" : ""}">
+    <div class="com-av">${avatar(p.id, p.nome)}<div><div class="nm">${esc(p.nome)} <span class="tag info">${esc(CAT[p.categoria] || "Visitante")}</span></div>
+      <div class="dim">${esc(p.empresa || "Particular")}${p.visitando ? `, ${p.categoria === "eventual" ? "responsável" : "visitando"} ${esc(p.visitando)}` : ""}${p.setor ? ` (${esc(p.setor)})` : ""}</div>
+      ${p.etiqueta ? `<div class="why">Etiqueta ${esc(p.etiqueta)}${p.orientado ? ", orientado sobre segurança" : ""}</div>` : ""}
+      ${vencida ? `<div class="why bad"><strong>Etiqueta vencida:</strong> entrada em ${fmtData(dayKey(new Date(p.ts)))}. Confira se a pessoa ainda está na planta.</div>` : ""}</div></div>
+    <div class="t"><b>${hhmm(p.ts)}</b><span class="dim small">há ${dur(Date.now() - p.ts)}</span></div>
+    <div class="acts"><button class="btn ghost sm" data-vetq="${esc(p.id)}">Etiqueta</button><button class="btn ghost sm" data-vsai="${esc(p.id)}">Registrar saída</button></div></div>`;
+}
+function ligarVisitantes(el){
+  $$("[data-vetq]", el).forEach(b => b.onclick = () => { const p = S.pres[b.dataset.vetq]; if (p) modalEtiqueta({ ...p, visId: b.dataset.vetq }); });
+  $$("[data-vsai]", el).forEach(b => b.onclick = () => exigirPlantao(async () => {
+    const id = b.dataset.vsai, p = S.pres[id]; if (!p) return;
+    if (!await confirmar("Registrar saída", `Saída de <strong>${esc(p.nome)}</strong>${p.etiqueta ? `, etiqueta ${esc(p.etiqueta)}` : ""}. Recolha a etiqueta.`, "Registrar saída")) return;
+    try{ const ev = await saidaVisitante(id); toast(`Saída registrada: ${ev.nome}`); }catch(e){ toast("Não foi possível gravar: " + e.message); }
+  }));
+}
+
+/* ============================================================
+   EVACUAÇÃO DE EMERGÊNCIA
+   Congela a lista de quem está na planta (terceiros e visitantes)
+   para conferência no ponto de encontro. Funciona em vários
+   aparelhos ao mesmo tempo, em tempo real.
+   ============================================================ */
+function evacAtiva(){ return S.evac?.ativa === true; }
+const quemOpera = () => plantao?.nome || sessao()?.name || (dev.terminal ? `Dispositivo ${dev.terminal}` : "Dispositivo");
+const exigirResponsavel = fn => (plantao || sessao()) ? fn() : modalPlantao(fn);
+const cron = ms => { const t = Math.max(0, Math.floor(ms / 1000)), h = Math.floor(t / 3600), m = Math.floor(t % 3600 / 60), s2 = t % 60;
+  return h ? `${h}:${pad(m)}:${pad(s2)}` : `${m}:${pad(s2)}`; };
+/* Quem sai pela portaria durante a evacuação já conta como conferido. */
+function evacSaida(tx, es, pid, ts){
+  if (!es?.exists()) return; const d = es.data(); if (!d.ativa) return;
+  const p = (d.pessoas || []).find(x => x.pid === pid); if (!p || p.status === "ok") return;
+  p.status = "ok"; p.em = ts; p.por = "Saída registrada na portaria";
+  tx.set(REF_EVAC, clean({ ...d, atualizadoEm: ts }));
+}
+
+let evacCarregou = false;
+onSnapshot(REF_EVAC, snap => {
+  const antes = evacAtiva();
+  S.evac = snap.exists() ? snap.data() : null;
+  const agora = evacAtiva();
+  if (evacCarregou && agora && !antes){ bip("bad"); setTimeout(() => bip("bad"), 1500); }
+  evacCarregou = true;
+  upEvacBar();
+  const r = rota();
+  if (r === "evacuacao" && !(S.sstOk && !licenca().ok)) (agora && $("#evLista")) ? upEvac() : vEvac();
+  if (r === "terminal" && antes !== agora && estadoTerm !== "processando" && $("#tbody")) termIdle();
+  if (r === "portaria" && $("#pres") && antes !== agora) upPortaria();
+}, e => console.warn("Evacuação:", e.message));
+
+function upEvacBar(){
+  const el = $("#evacBar"), b = $("#evacBtn"); if (!el) return;
+  if (!evacAtiva()){
+    el.innerHTML = "";
+    if (b){ b.classList.remove("ativa"); b.querySelector(".nl-x").textContent = "Evacuação"; b.setAttribute("aria-label", "Evacuação de emergência"); }
+    return;
+  }
+  const e = S.evac, ps = e.pessoas || [], ok = ps.filter(p => p.status === "ok").length;
+  if (b){ b.classList.add("ativa"); b.querySelector(".nl-x").textContent = "Evacuação ativa"; b.setAttribute("aria-label", "Abrir conferência da evacuação"); }
+  el.innerHTML = `<span>${e.tipo === "simulado" ? "Simulado de evacuação" : "Evacuação de emergência"} em andamento desde ${hhmm(e.inicio)}. ${ok} de ${ps.length} conferidos.</span>
+    ${rota() !== "evacuacao" ? `<a class="btn sm" href="#/evacuacao">Abrir conferência</a>` : ""}`;
+}
+function abrirEvacuacao(){
+  if (S.sstOk && !licenca().ok) return toast(licenca().motivo);
+  if (evacAtiva()){ if (rota() === "evacuacao") vEvac(); else location.hash = "#/evacuacao"; return; }
+  modalIniciarEvac();
+}
+$("#evacBtn").onclick = abrirEvacuacao;
+
+function modalIniciarEvac(){
+  const ps = Object.values(S.pres), vis = ps.filter(p => p.categoria).length;
+  abrirModal(`<h3>Iniciar evacuação de emergência</h3>
+    <p>Gera a lista de quem está na planta agora, <strong>${ps.length} pessoa${ps.length === 1 ? "" : "s"}</strong> (${ps.length - vis} terceiro${ps.length - vis === 1 ? "" : "s"} e ${vis} visitante${vis === 1 ? "" : "s"}), para conferência no ponto de encontro. O terminal passa a avisar para não entrar e as entradas ficam suspensas.</p>
+    <div class="seg" role="radiogroup" aria-label="Tipo de evacuação">
+      <label><input type="radio" name="evtipo" value="real" checked><span>Emergência real</span></label>
+      <label><input type="radio" name="evtipo" value="simulado"><span>Simulado</span></label></div>
+    <label>O que aconteceu (opcional)<input type="text" id="evmot" placeholder="Ex.: alarme de incêndio no galpão 2"></label>
+    <p class="err" id="everr"></p>
+    <div class="row"><button class="btn ghost" id="evc">Cancelar</button><button class="btn bad" id="evo">Iniciar evacuação</button></div>`, ov => {
+    $("#evc", ov).onclick = fecharModal;
+    $("#evo", ov).onclick = async () => {
+      const btn = $("#evo", ov); btn.disabled = true; btn.textContent = "Iniciando…";
+      try{
+        await iniciarEvac({ tipo: $("[name=evtipo]:checked", ov).value, motivo: $("#evmot", ov).value.trim() });
+        fecharModal(); filtroEvac = "falta";
+        if (rota() === "evacuacao") vEvac(); else location.hash = "#/evacuacao";
+      }catch(e){ $("#everr", ov).textContent = "Não foi possível iniciar: " + e.message; btn.disabled = false; btn.textContent = "Iniciar evacuação"; }
+    };
+    setTimeout(() => $("#evo", ov)?.focus(), 0);
+  });
+}
+async function iniciarEvac(o){
+  await runTransaction(db, async tx => {
+    const es = await tx.get(REF_EVAC), ps = await tx.get(REF_PRES);
+    if (es.exists() && es.data().ativa) return;
+    const pessoas = ps.exists() ? (ps.data().pessoas || {}) : {}, agora = Date.now();
+    const lista = Object.entries(pessoas).map(([pid, p]) => ({ pid, nome: p.nome || "", empresa: p.empresa || "", categoria: p.categoria || "terceiro",
+      funcao: p.funcao || "", entradaTs: p.ts || null, etiqueta: p.etiqueta || "", visitando: p.visitando || "", status: "pendente" }))
+      .sort((a, b) => a.nome.localeCompare(b.nome, "pt-BR"));
+    tx.set(REF_EVAC, clean({ ativa: true, id: uid(), inicio: agora, por: quemOpera(), terminal: dev.terminal || "", tipo: o.tipo, motivo: o.motivo || "",
+      ponto: S.cfg.emergencia?.ponto || "", pessoas: lista, atualizadoEm: agora }));
+  });
+  bip("bad");
+}
+async function marcarEvac(pid, ok){
+  const quem = quemOpera();
+  await runTransaction(db, async tx => {
+    const es = await tx.get(REF_EVAC);
+    if (!es.exists() || !es.data().ativa) throw new Error("A evacuação já foi encerrada.");
+    const d = es.data(), p = (d.pessoas || []).find(x => x.pid === pid); if (!p) return;
+    if (ok){ p.status = "ok"; p.em = Date.now(); p.por = quem; } else { p.status = "pendente"; delete p.em; delete p.por; }
+    tx.set(REF_EVAC, clean({ ...d, atualizadoEm: Date.now() }));
+  });
+}
+async function addEvac(nome, empresa, ok){
+  const quem = quemOpera();
+  await runTransaction(db, async tx => {
+    const es = await tx.get(REF_EVAC);
+    if (!es.exists() || !es.data().ativa) throw new Error("A evacuação já foi encerrada.");
+    const d = es.data(), agora = Date.now();
+    (d.pessoas = d.pessoas || []).push({ pid: "a_" + uid(), nome, empresa, categoria: "adicionado", entradaTs: null, status: ok ? "ok" : "pendente", ...(ok ? { em: agora, por: quem } : {}) });
+    tx.set(REF_EVAC, clean({ ...d, atualizadoEm: agora }));
+  });
+}
+async function encerrarEvac(o){
+  const quem = quemOpera(); let final;
+  await runTransaction(db, async tx => {
+    const es = await tx.get(REF_EVAC), cs = await tx.get(REF_CFG);
+    const ps = o.saidaTodos ? await tx.get(REF_PRES) : null, ds = o.saidaTodos ? await tx.get(refDia(dayKey())) : null;
+    if (!es.exists() || !es.data().ativa) throw new Error("A evacuação já foi encerrada em outro aparelho.");
+    const agora = Date.now(), d = es.data(), lista = d.pessoas || [], pend = lista.filter(p => p.status !== "ok");
+    final = { ...d, ativa: false, fim: agora, encerradoPor: quem, obs: o.obs || "", saidaTodos: !!o.saidaTodos, atualizadoEm: agora };
+    const c = lerCfg(cs.exists() ? cs.data() : {});
+    c.evacuacoes.push({ id: d.id, inicio: d.inicio, fim: agora, tipo: d.tipo, motivo: d.motivo || "", por: d.por, encerradoPor: quem,
+      total: lista.length, conferidos: lista.length - pend.length, faltantes: pend.map(p => p.nome).slice(0, 50), obs: o.obs || "" });
+    c.evacuacoes = c.evacuacoes.slice(-100);
+    if (o.saidaTodos){
+      const pessoas = ps.exists() ? (ps.data().pessoas || {}) : {}, eventos = ds.exists() ? (ds.data().eventos || []) : [];
+      Object.entries(pessoas).forEach(([pid, p]) => eventos.push({ id: uid(), ts: agora, tipo: "saida",
+        ...(p.categoria ? { visId: pid, categoria: p.categoria, etiqueta: p.etiqueta || "", visitando: p.visitando || "" } : { funcId: pid }),
+        nome: p.nome || "", cpf: p.cpf || "", empresa: p.empresa || "", empresaId: p.empresaId || "", funcao: p.funcao || "", metodo: "manual",
+        terminal: dev.terminal || "", operador: quem, obs: "Saída geral após evacuação", motivos: [], entradaTs: p.ts || null }));
+      tx.set(refDia(dayKey()), clean({ eventos, atualizadoEm: agora }));
+      tx.set(REF_PRES, clean({ pessoas: {}, atualizadoEm: agora }));
+    }
+    tx.set(REF_EVAC, clean(final));
+    tx.set(doc(db, COL, "portaria_evac_" + d.id), clean(final));
+    tx.set(REF_CFG, clean({ ...c, atualizadoEm: agora }));
+  });
+  return final;
+}
+
+/* ---------- tela de conferência ---------- */
+let filtroEvac = "falta";
+function vEvac(){
+  if (!evacAtiva()) return vEvacInativa();
+  $("#view").innerHTML = `
+    <section class="ev-head"><div><h1 id="evTit"></h1><p class="meta" id="evMeta"></p></div>
+      <div class="ev-tempo"><span class="small">Tempo decorrido</span><b id="evTempo">${cron(Date.now() - S.evac.inicio)}</b></div></section>
+    <div class="ev-cont" id="evCont"></div>
+    <section class="card">
+      <div class="card-h"><h2>Conferência no ponto de encontro</h2>
+        <input type="search" id="evq" class="in-sm" placeholder="Buscar nome ou etiqueta" aria-label="Buscar na lista de evacuação">
+        <div class="chips" id="evChips"></div></div>
+      <div id="evLista"></div>
+    </section>
+    <div class="ev-acoes"><button class="btn ghost" id="evAdd">Adicionar pessoa</button><button class="btn ghost" id="evPdf">Gerar PDF da lista</button><button class="btn bad" id="evFim">Encerrar evacuação</button></div>
+    <p class="dim small">A lista traz os terceiros e visitantes registrados na portaria quando a evacuação começou. Funcionários próprios são conferidos pela brigada.</p>`;
+  $("#evq").oninput = upEvac;
+  $("#evChips").onclick = e => { const b = e.target.closest("[data-f]"); if (!b) return; filtroEvac = b.dataset.f; upEvac(); };
+  $("#evLista").onclick = async e => {
+    const b = e.target.closest("[data-ev]"); if (!b || b.disabled) return;
+    b.disabled = true;
+    try{ await marcarEvac(b.dataset.ev, b.getAttribute("aria-pressed") !== "true"); }
+    catch(err){ toast("Não foi possível gravar: " + err.message); b.disabled = false; }
+  };
+  $("#evAdd").onclick = modalAddEvac;
+  $("#evPdf").onclick = async ev => { const b = ev.currentTarget; b.disabled = true; try{ await gerarPdfEvac(S.evac); }catch(e){ toast(e.message); } b.disabled = false; };
+  $("#evFim").onclick = () => exigirResponsavel(modalEncerrarEvac);
+  upEvac();
+}
+function upEvac(){
+  const e = S.evac; if (!e?.ativa || !$("#evLista")) return;
+  const ps = e.pessoas || [], ok = ps.filter(p => p.status === "ok").length, falta = ps.length - ok;
+  $("#evTit").textContent = e.tipo === "simulado" ? "Simulado de evacuação" : "Evacuação em andamento";
+  $("#evMeta").innerHTML = [`Iniciada às ${hhmm(e.inicio)} por ${esc(e.por)}`, e.motivo && esc(e.motivo), `Ponto de encontro: ${e.ponto ? esc(e.ponto) : "não definido"}`].filter(Boolean).join(". ") + ".";
+  $("#evCont").innerHTML = `<div class="falta ${falta ? "" : "zero"}"><b>${falta}</b><span>${falta ? "sem confirmação" : "todos conferidos"}</span></div>
+    <div class="ok"><b>${ok}</b><span>no ponto de encontro</span></div><div><b>${ps.length}</b><span>na lista</span></div>`;
+  $("#evChips").innerHTML = [["falta", `Sem confirmação (${falta})`], ["ok", `No ponto (${ok})`], ["todos", "Todos"]]
+    .map(([v, t]) => `<button class="chip" data-f="${v}" aria-pressed="${filtroEvac === v}">${t}</button>`).join("");
+  const q = norm($("#evq").value);
+  const lista = ps.filter(p => (filtroEvac === "todos" || (filtroEvac === "ok" ? p.status === "ok" : p.status !== "ok"))
+      && (!q || norm([p.nome, p.empresa, p.etiqueta, p.visitando].join(" ")).includes(q)))
+    .sort((a, b) => (a.status === "ok") - (b.status === "ok") || String(a.nome).localeCompare(String(b.nome), "pt-BR"));
+  $("#evLista").innerHTML = lista.length ? lista.map(p => `<div class="rol ${p.status === "ok" ? "ok" : ""}">
+      <div class="com-av">${avatar(p.pid, p.nome)}<div><div class="nm">${esc(p.nome)}${p.categoria !== "terceiro" ? ` <span class="tag info">${esc(CAT[p.categoria] || "")}</span>` : ""}</div>
+        <div class="dim small">${[p.empresa, p.visitando && (p.categoria === "eventual" ? "responsável " : "visitando ") + p.visitando, p.etiqueta && "etiqueta " + p.etiqueta, p.entradaTs && "entrou às " + hhmm(p.entradaTs)].filter(Boolean).map(esc).join(", ") || "—"}</div>
+        ${p.status === "ok" ? `<div class="why" style="color:var(--ok)">Conferido às ${hhmm(p.em)} por ${esc(p.por)}</div>` : ""}</div></div>
+      <button class="rol-btn" data-ev="${esc(p.pid)}" aria-pressed="${p.status === "ok"}">${p.status === "ok" ? "✓ No ponto de encontro" : "Confirmar presença"}</button></div>`).join("")
+    : `<div class="empty">${q ? "Ninguém encontrado com essa busca." : filtroEvac === "falta" && ps.length ? "Todos da lista foram conferidos." : filtroEvac === "ok" ? "Ninguém conferido ainda." : "Ninguém estava registrado na planta."}</div>`;
+  upEvacBar();
+}
+function vEvacInativa(){
+  const ps = Object.values(S.pres), vis = ps.filter(p => p.categoria).length, u = S.evac?.fim ? S.evac : null;
+  const ponto = S.cfg.emergencia?.ponto || "";
+  $("#view").innerHTML = `<section class="card ev-off" id="evInativa">
+    <h1>Evacuação de emergência</h1>
+    <p>Gera na hora a lista de todos que estão na planta, para conferência no ponto de encontro em qualquer celular ou computador. Agora há <strong>${ps.length} pessoa${ps.length === 1 ? "" : "s"}</strong> registrada${ps.length === 1 ? "" : "s"}: ${ps.length - vis} terceiro${ps.length - vis === 1 ? "" : "s"} e ${vis} visitante${vis === 1 ? "" : "s"}.</p>
+    ${ponto ? `<p>Ponto de encontro: <strong>${esc(ponto)}</strong></p>` : `<p class="note">O ponto de encontro ainda não foi definido. A Segurança do Trabalho define em Segurança do Trabalho › Emergência.</p>`}
+    <button class="btn bad" id="evIni">Iniciar evacuação</button>
+    ${u ? `<p class="dim small">Última ${u.tipo === "simulado" ? "evacuação (simulado)" : "evacuação"}: ${dataHora(u.inicio)}, duração ${dur(u.fim - u.inicio)}, ${(u.pessoas || []).filter(p => p.status === "ok").length} de ${(u.pessoas || []).length} conferidos. <button class="link" id="evUlt" style="font-size:inherit">Gerar PDF</button></p>` : ""}
+  </section>`;
+  $("#evIni").onclick = abrirEvacuacao;
+  $("#evUlt")?.addEventListener("click", async () => { try{ await gerarPdfEvac(u); }catch(e){ toast(e.message); } });
+}
+function modalAddEvac(){
+  abrirModal(`<h3>Adicionar pessoa à lista</h3>
+    <p class="dim">Para quem está na área e não foi registrado na portaria.</p>
+    <label>Nome<input type="text" id="eanome" autocomplete="off"></label>
+    <label>Empresa ou setor (opcional)<input type="text" id="eaemp" autocomplete="off"></label>
+    <label class="rule" style="padding:0;border:0"><input type="checkbox" id="eaok" checked><span>Já está no ponto de encontro</span></label>
+    <p class="err" id="eaerr"></p>
+    <div class="row"><button class="btn ghost" id="eac">Cancelar</button><button class="btn" id="eao">Adicionar</button></div>`, ov => {
+    $("#eac", ov).onclick = fecharModal;
+    $("#eao", ov).onclick = async () => {
+      const nome = $("#eanome", ov).value.trim();
+      if (nome.length < 3){ $("#eaerr", ov).textContent = "Informe o nome."; return; }
+      $("#eao", ov).disabled = true;
+      try{ await addEvac(nome, $("#eaemp", ov).value.trim(), $("#eaok", ov).checked); fecharModal(); toast(`${nome} adicionado à lista.`); }
+      catch(e){ $("#eaerr", ov).textContent = "Não foi possível gravar: " + e.message; $("#eao", ov).disabled = false; }
+    };
+  });
+}
+function modalEncerrarEvac(){
+  const e = S.evac; if (!e?.ativa) return;
+  const lista = e.pessoas || [], pend = lista.filter(p => p.status !== "ok");
+  abrirModal(`<h3>Encerrar evacuação</h3>
+    ${pend.length ? `<div class="note" style="border-color:var(--bad)"><strong>${pend.length} pessoa${pend.length === 1 ? "" : "s"} sem confirmação:</strong><br>${pend.slice(0, 12).map(p => esc(p.nome)).join("<br>")}${pend.length > 12 ? `<br>e mais ${pend.length - 12}` : ""}</div>
+      <label class="rule" style="padding:0;border:0"><input type="checkbox" id="efconf"><span>Confirmo que a situação dessas pessoas foi verificada com a brigada</span></label>`
+      : `<p>Todas as ${lista.length} pessoas da lista foram conferidas.</p>`}
+    <label class="rule" style="padding:0;border:0"><input type="checkbox" id="efsai"><span>Registrar a saída de todos que constam na planta (use se as atividades não forem retomadas hoje)</span></label>
+    <label>Observações (opcional)<textarea id="efobs" rows="3" placeholder="Ex.: alarme falso, área liberada pelo Corpo de Bombeiros às 15:10"></textarea></label>
+    <p class="small dim">Encerrado por ${esc(quemOpera())}.</p>
+    <p class="err" id="eferr"></p>
+    <div class="row"><button class="btn ghost" id="efc">Cancelar</button><button class="btn bad" id="efo">Encerrar evacuação</button></div>`, ov => {
+    $("#efc", ov).onclick = fecharModal;
+    $("#efo", ov).onclick = async () => {
+      if (pend.length && !$("#efconf", ov).checked){ $("#eferr", ov).textContent = "Confirme a verificação das pessoas sem confirmação."; return; }
+      const btn = $("#efo", ov); btn.disabled = true;
+      try{
+        const fim = await encerrarEvac({ saidaTodos: $("#efsai", ov).checked, obs: $("#efobs", ov).value.trim() });
+        fecharModal();
+        abrirModal(`<h3>Evacuação encerrada</h3><p>Duração de ${dur(fim.fim - fim.inicio)}. ${lista.length - pend.length} de ${lista.length} pessoas conferidas. O registro fica em Segurança do Trabalho › Emergência.</p>
+          <div class="row"><button class="btn ghost" id="eff">Fechar</button><button class="btn" id="efpdf">Gerar PDF</button></div>`, o2 => {
+          $("#eff", o2).onclick = fecharModal;
+          $("#efpdf", o2).onclick = async () => { try{ await gerarPdfEvac(fim); fecharModal(); }catch(err){ toast(err.message); } };
+        });
+      }catch(err){ $("#eferr", ov).textContent = "Não foi possível encerrar: " + err.message; btn.disabled = false; }
+    };
+  });
+}
+function termEvacuacao(b){
+  estadoTerm = "evac";
+  const ponto = S.evac.ponto || S.cfg.emergencia?.ponto || "";
+  b.className = "tbody res res-bad"; b.onclick = null; b.setAttribute("aria-live", "assertive");
+  b.innerHTML = `<h1>${S.evac.tipo === "simulado" ? "Simulado de evacuação" : "Evacuação de emergência"}</h1>
+    <div class="nome">Não entre na empresa</div>
+    <p>Siga as orientações da brigada e vá até o ponto de encontro${ponto ? `: <strong>${esc(ponto)}</strong>` : ""}.</p>`;
+}
+
+/* ---------- Segurança do Trabalho › Emergência ---------- */
+function montarEmergencia(b){
+  b.innerHTML = `<section class="card"><div class="card-h"><h2>Ponto de encontro</h2></div>
+      <p class="dim" style="padding:12px 16px 0">Aparece na etiqueta dos visitantes, no terminal e na tela de evacuação.</p>
+      <div class="bar"><input type="text" id="epto" style="flex:1 1 320px" value="${esc(S.cfg.emergencia?.ponto || "")}" placeholder="Ex.: estacionamento frontal, ao lado da guarita" aria-label="Ponto de encontro">
+        <button class="btn" id="eptoS">Salvar</button></div></section>
+    <section class="card" style="margin-top:14px"><div class="card-h"><h2>Evacuações registradas</h2><button class="btn bad sm" id="enova">Iniciar evacuação</button></div>
+      <div class="tbl" id="evhist"></div></section>`;
+  $("#eptoS").onclick = async () => {
+    try{ await mutCfg(c => { c.emergencia.ponto = $("#epto").value.trim(); }); toast("Ponto de encontro salvo."); }catch(e){ toast("Erro: " + e.message); }
+  };
+  $("#enova").onclick = abrirEvacuacao;
+}
+function upEvHist(){
+  const el = $("#evhist"); if (!el) return;
+  const l = S.cfg.evacuacoes.slice().sort((a, b) => b.inicio - a.inicio);
+  el.innerHTML = l.length ? `<table><thead><tr><th>Início</th><th>Tipo</th><th>Duração</th><th>Conferência</th><th>Responsáveis</th><th>Ações</th></tr></thead><tbody>
+    ${l.map(x => `<tr><td>${dataHora(x.inicio)}${x.motivo ? `<div class="dim small">${esc(x.motivo)}</div>` : ""}</td>
+      <td>${x.tipo === "simulado" ? `<span class="tag info">Simulado</span>` : `<span class="tag bad">Emergência</span>`}</td>
+      <td>${dur(x.fim - x.inicio)}</td>
+      <td>${x.conferidos === x.total ? `<span class="tag ok">${x.conferidos} de ${x.total}</span>` : `<span class="tag warn">${x.conferidos} de ${x.total}</span><div class="why">Sem confirmação: ${(x.faltantes || []).map(esc).join(", ")}</div>`}${x.obs ? `<div class="why">${esc(x.obs)}</div>` : ""}</td>
+      <td class="small">Iniciada por ${esc(x.por)}<br>Encerrada por ${esc(x.encerradoPor)}</td>
+      <td><button class="btn ghost sm" data-evpdf="${esc(x.id)}">Gerar PDF</button></td></tr>`).join("")}</tbody></table>`
+    : `<div class="empty">Nenhuma evacuação registrada. Simulados também ficam registrados aqui.</div>`;
+  $$("[data-evpdf]", el).forEach(b => b.onclick = async () => {
+    b.disabled = true;
+    try{ const sn = await getDoc(doc(db, COL, "portaria_evac_" + b.dataset.evpdf)); if (!sn.exists()) throw new Error("O registro completo desta evacuação não foi encontrado."); await gerarPdfEvac(sn.data()); }
+    catch(e){ toast(e.message); } finally{ b.disabled = false; }
+  });
+}
+
+/* ---------- PDF da evacuação ---------- */
+async function gerarPdfEvac(e){
+  if (!e) throw new Error("Nenhuma evacuação para gerar.");
+  await carregarLibsPdf();
+  const { jsPDF } = window.jspdf;
+  const pdf = new jsPDF({ unit: "mm", format: "a4" });
+  const W = pdf.internal.pageSize.getWidth(), H = pdf.internal.pageSize.getHeight(), M = 12;
+  const tinta = [28, 30, 28], cinza = [95, 100, 92], amarelo = [245, 183, 0], vermelho = [198, 40, 40], verde = [46, 125, 50];
+  const logo = await logoNaCor("#1C1E1C").catch(() => null);
+  const simulado = e.tipo === "simulado";
+  const cab = () => {
+    for (let x = -6; x < W; x += 8){ pdf.setFillColor(...(Math.round(x / 8) % 2 ? tinta : amarelo)); pdf.triangle(x, 0, x + 4, 0, x - 2, 3, "F"); pdf.triangle(x + 4, 0, x - 2, 3, x + 2, 3, "F"); }
+    if (logo){ const h = 11, w = h * logo.w / logo.h; pdf.addImage(logo.data, "PNG", M, 7, w, h); }
+    pdf.setTextColor(...tinta); pdf.setFont("helvetica", "bold"); pdf.setFontSize(13.5);
+    pdf.text(simulado ? "Relatório de simulado de evacuação" : "Relatório de evacuação de emergência", W - M, 12, { align: "right" });
+    pdf.setFont("helvetica", "normal"); pdf.setFontSize(9); pdf.setTextColor(...cinza);
+    pdf.text(`Início ${dataHora(e.inicio)}${e.fim ? `   |   Fim ${dataHora(e.fim)}, duração ${dur(e.fim - e.inicio)}` : "   |   Em andamento"}`, W - M, 17, { align: "right" });
+    pdf.setDrawColor(210, 212, 206); pdf.line(M, 22, W - M, 22);
+  };
+  cab();
+  let y = 28;
+  const ps = (e.pessoas || []).slice().sort((a, b) => (a.status === "ok") - (b.status === "ok") || String(a.nome).localeCompare(String(b.nome), "pt-BR"));
+  const ok = ps.filter(p => p.status === "ok").length, falta = ps.length - ok;
+  const bw = (W - 2 * M - 8) / 3;
+  [["Na lista", ps.length, tinta], ["No ponto de encontro", ok, verde], ["Sem confirmação", falta, falta ? vermelho : tinta]].forEach(([t, v, cor], i) => {
+    const x = M + i * (bw + 4);
+    pdf.setDrawColor(210, 212, 206); pdf.setFillColor(247, 247, 244); pdf.roundedRect(x, y, bw, 16, 2, 2, "FD");
+    pdf.setFont("helvetica", "bold"); pdf.setFontSize(15); pdf.setTextColor(...cor); pdf.text(String(v), x + 4, y + 7.5);
+    pdf.setFont("helvetica", "normal"); pdf.setFontSize(8.5); pdf.setTextColor(...cinza); pdf.text(t, x + 4, y + 13);
+  });
+  y += 21;
+  const margem = { top: 28, left: M, right: M, bottom: 14 };
+  pdf.autoTable({ startY: y, margin: margem, theme: "plain", styles: { font: "helvetica", fontSize: 9, cellPadding: 1.2, textColor: tinta },
+    columnStyles: { 0: { fontStyle: "bold", cellWidth: 40, textColor: cinza } },
+    body: [["Tipo", simulado ? "Simulado (treinamento)" : "Emergência real"], ["Ocorrência", e.motivo || "—"], ["Ponto de encontro", e.ponto || "—"],
+      ["Iniciada por", `${e.por || "—"}${e.terminal ? ` (${e.terminal})` : ""}`], ["Encerrada por", e.encerradoPor || "—"],
+      ...(e.obs ? [["Observações", e.obs]] : []), ...(e.saidaTodos ? [["Saída geral", "Saída registrada para todos que constavam na planta"]] : [])],
+    didDrawPage: () => { if (pdf.getCurrentPageInfo().pageNumber > 1) cab(); } });
+  y = pdf.lastAutoTable.finalY + 6;
+  pdf.setFont("helvetica", "bold"); pdf.setFontSize(11); pdf.setTextColor(...tinta); pdf.text(`Lista de conferência (${ps.length})`, M, y); y += 2;
+  pdf.autoTable({ startY: y, margin: margem, theme: "grid",
+    styles: { font: "helvetica", fontSize: 8.5, cellPadding: 1.8, textColor: tinta, lineColor: [225, 226, 221], lineWidth: 0.1, valign: "top" },
+    headStyles: { fillColor: tinta, textColor: [255, 255, 255], fontStyle: "bold" },
+    head: [["Situação", "Nome", "Categoria", "Empresa", "Entrada", "Conferência"]],
+    body: ps.length ? ps.map(p => [p.status === "ok" ? "Conferido" : "Sem confirmação", `${p.nome}${p.etiqueta ? "\n" + p.etiqueta : ""}`, CAT[p.categoria] || "Terceiro",
+        p.empresa || "—", p.entradaTs ? hhmm(p.entradaTs) : "—", p.status === "ok" ? `${hhmm(p.em)}\n${p.por || ""}` : "—"])
+      : [[{ content: "Ninguém estava registrado na planta.", colSpan: 6, styles: { halign: "center", textColor: cinza } }]],
+    columnStyles: { 0: { cellWidth: 27 }, 2: { cellWidth: 28 }, 4: { cellWidth: 15 }, 5: { cellWidth: 36 } },
+    didParseCell: d => { if (d.section !== "body" || !ps.length) return;
+      if (ps[d.row.index].status !== "ok"){ d.cell.styles.fillColor = [252, 232, 230]; if (d.column.index === 0){ d.cell.styles.textColor = vermelho; d.cell.styles.fontStyle = "bold"; } } },
+    didDrawPage: () => { if (pdf.getCurrentPageInfo().pageNumber > 1) cab(); } });
+  y = pdf.lastAutoTable.finalY + 22;
+  if (y > H - 24){ pdf.addPage(); cab(); y = 50; }
+  pdf.setDrawColor(...tinta); pdf.setFont("helvetica", "normal"); pdf.setFontSize(8.5); pdf.setTextColor(...cinza);
+  const lw = (W - 2 * M - 20) / 2;
+  [["Responsável pela brigada", M], ["Segurança do Trabalho", M + lw + 20]].forEach(([t, x]) => { pdf.line(x, y, x + lw, y); pdf.text(t, x, y + 4.5); });
+  const n = pdf.getNumberOfPages(), quem = sessao()?.name || plantao?.nome || "";
+  for (let i = 1; i <= n; i++){ pdf.setPage(i); pdf.setFont("helvetica", "normal"); pdf.setFontSize(8); pdf.setTextColor(...cinza);
+    pdf.text(`Emitido em ${dataHora(Date.now())}${quem ? " por " + quem : ""}. Lista gerada pela Portaria.`, M, H - 7);
+    pdf.text(`Página ${i} de ${n}`, W - M, H - 7, { align: "right" }); }
+  pdf.save(`evacuacao_${dayKey(new Date(e.inicio))}_${hhmm(e.inicio).replace(":", "h")}.pdf`);
 }
 
 /* ---------- tabelas no celular: cada célula recebe o nome da coluna ---------- */
@@ -1623,7 +2284,7 @@ function rotularTabelas(raiz = document){
 new MutationObserver(() => rotularTabelas()).observe(document.getElementById("view"), { childList:true, subtree:true });
 
 /* ---------- relógio, tema, início ---------- */
-const tick = () => { const t = new Date().toLocaleTimeString("pt-BR", {hour:"2-digit", minute:"2-digit", second:"2-digit"}); $("#clock").textContent = t; const tc = $("#tclock"); if (tc) tc.textContent = t; };
+const tick = () => { const t = new Date().toLocaleTimeString("pt-BR", {hour:"2-digit", minute:"2-digit", second:"2-digit"}); $("#clock").textContent = t; const tc = $("#tclock"); if (tc) tc.textContent = t; const et = $("#evTempo"); if (et && S.evac?.ativa) et.textContent = cron(Date.now() - S.evac.inicio); };
 setInterval(tick, 1000); tick();
 setInterval(licChange, 60000);
 setInterval(() => { if (rota() === "portaria" && $("#pres")) upPresenca(); }, 30000);
@@ -1753,11 +2414,11 @@ async function gerarPdf(o){
   doc.setFont("helvetica", "bold"); doc.setFontSize(11); doc.setTextColor(...tinta);
   if (y > H - 30){ doc.addPage(); cabecalho(); y = 30; }
   doc.text(`Movimentação (${evs.length} registro${evs.length === 1 ? "" : "s"})`, M, y); y += 2;
-  const detalhe = e => [...(e.motivos || []), e.excecao && "Liberação especial: " + e.excecao, e.obs && "Obs.: " + e.obs,
+  const detalhe = e => [...(e.motivos || []), e.excecao && "Liberação especial: " + e.excecao, e.visitando && (e.categoria === "eventual" ? "Responsável: " : "Visitando: ") + e.visitando, e.motivo && "Motivo: " + e.motivo, e.obs && "Obs.: " + e.obs,
     e.ciente && `Ciente: ${e.ciente.por} às ${hhmm(e.ciente.ts)}`, e.tipo === "saida" && e.entradaTs && `Permanência: ${dur(e.ts - e.entradaTs)}`].filter(Boolean).join("\n");
   doc.autoTable({ startY: y, margin: margem, styles: estilo, headStyles: head, theme: "grid",
     head: [["Data", "Hora", "Tipo", "Terceiro", "CPF", "Empresa", "Forma", "Detalhes"]],
-    body: evs.length ? evs.map(e => [new Date(e.ts).toLocaleDateString("pt-BR"), hhmm(e.ts), (TIPO[e.tipo] || [e.tipo])[0], e.nome, fmtCpf(e.cpf) || "—", e.empresa || "—",
+    body: evs.length ? evs.map(e => [new Date(e.ts).toLocaleDateString("pt-BR"), hhmm(e.ts), (TIPO[e.tipo] || [e.tipo])[0], e.categoria ? `${e.nome}\n${CAT[e.categoria] || ""}${e.etiqueta ? " " + e.etiqueta : ""}` : e.nome, fmtCpf(e.cpf) || "—", e.empresa || "—",
       [METODO[e.metodo] || e.metodo, e.operador, e.terminal].filter(Boolean).join("\n"), detalhe(e) || "—"])
       : [[{ content: "Nenhum registro no período e filtros escolhidos.", colSpan: 8, styles: { halign: "center", textColor: cinza } }]],
     columnStyles: { 0: { cellWidth: 20 }, 1: { cellWidth: 13 }, 2: { cellWidth: 26 }, 3: { cellWidth: 42 }, 4: { cellWidth: 27 }, 5: { cellWidth: 44 }, 6: { cellWidth: 34 } },
@@ -1777,7 +2438,7 @@ async function gerarPdf(o){
     doc.text(`Na planta no momento da emissão (${pres.length})`, M, y); y += 2;
     doc.autoTable({ startY: y, margin: margem, styles: estilo, headStyles: head, theme: "grid",
       head: [["Terceiro", "CPF", "Empresa", "Função", "Entrada", "Tempo na planta"]],
-      body: pres.length ? pres.map(p => [p.nome, fmtCpf(p.cpf) || "—", p.empresa || "—", p.funcao || "—", dataHora(p.ts), dur(Date.now() - p.ts)])
+      body: pres.length ? pres.map(p => [p.nome, fmtCpf(p.cpf) || "—", p.empresa || "—", p.funcao || CAT[p.categoria] || "—", dataHora(p.ts), dur(Date.now() - p.ts)])
         : [[{ content: "Nenhum terceiro na planta.", colSpan: 6, styles: { halign: "center", textColor: cinza } }]],
       didDrawPage: () => { if (doc.getCurrentPageInfo().pageNumber > 1) cabecalho(); } });
   }
