@@ -1770,36 +1770,7 @@ function imprimirEtiqueta(v){
   const w = ifr.contentWindow, d = w.document;
   d.open();
   d.write(`<!DOCTYPE html><html lang="pt-BR"><head><meta charset="utf-8"><title>Etiqueta ${esc(v.etiqueta || "")}</title>
-    <style>@page{size:${f.w}mm ${f.h}mm;margin:0}html,body{margin:0;padding:0;background:#fff;width:${f.w}mm;height:${f.h}mm;overflow:hidden}${ETQ_CSS}</style><link rel="manifest" href="./manifest.webmanifest">
-<link rel="apple-touch-icon" href="./icons/icon-192.png">
-<style>#installApp[hidden],#installHelp[hidden]{display:none!important}#installHelp{position:fixed;inset:0;background:#0009;z-index:99999;display:grid;place-items:center;padding:20px}#installHelp section{background:var(--panel);color:var(--ink);padding:24px;border-radius:16px;max-width:420px}#installHelp p{margin:16px 0}</style>
-</head><body>${etiquetaHtml(v)}
-<div id="installHelp" hidden role="dialog" aria-modal="true" aria-labelledby="installTitle"><section><h2 id="installTitle">Instalar Portaria</h2><p id="installText"></p><button type="button" class="btn" id="installClose">Entendi</button></section></div>
-<script>
-(()=>{
-const button=document.getElementById('installApp'),help=document.getElementById('installHelp'),message=document.getElementById('installText');
-let pending=null,installed=false;
-const standalone=()=>installed||window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
-const mobile=()=>/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
-const update=()=>{button.hidden=!mobile()||standalone()};
-const explain=text=>{message.textContent=text;help.hidden=false;document.getElementById('installClose').focus()};
-document.getElementById('installClose').onclick=()=>{help.hidden=true;button.focus()};
-help.addEventListener('keydown',e=>{if(e.key==='Escape'){help.hidden=true;button.focus()}});
-window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();pending=e;update()});
-window.addEventListener('appinstalled',()=>{installed=true;pending=null;help.hidden=true;update()});
-window.matchMedia('(display-mode: standalone)').addEventListener('change',update);
-button.onclick=async()=>{
- if(pending){const prompt=pending;pending=null;try{await prompt.prompt();const result=await prompt.userChoice;if(result.outcome==='accepted'){installed=true;update()}}catch(e){explain('Abra o menu do navegador e escolha Instalar aplicativo ou Adicionar à tela inicial.')}return}
- if(!window.isSecureContext||location.protocol==='file:'){explain('Para instalar, abra o endereço HTTPS do sistema publicado. O arquivo aberto diretamente no celular não permite instalação.');return}
- if(/iPhone|iPad|iPod/i.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1)){explain('No Safari, toque em Compartilhar e depois em Adicionar à Tela de Início. Ative Abrir como App, se essa opção aparecer, e toque em Adicionar.');return}
- explain('No menu do navegador (⋮), escolha Instalar aplicativo ou Adicionar à tela inicial. Se a opção ainda não aparecer, recarregue a página após publicar todos os arquivos do pacote.');
-};
-if('serviceWorker' in navigator&&window.isSecureContext&&location.protocol!=='file:')navigator.serviceWorker.register('./sw.js').catch(console.warn);
-update();
-})();
-</script>
-
-</body></html>`);
+    <style>@page{size:${f.w}mm ${f.h}mm;margin:0}html,body{margin:0;padding:0;background:#fff;width:${f.w}mm;height:${f.h}mm;overflow:hidden}${ETQ_CSS}</style></head><body>${etiquetaHtml(v)}</body></html>`);
   d.close();
   const remover = () => setTimeout(() => ifr.remove(), 1000);
   w.onafterprint = remover; setTimeout(() => ifr.remove(), 120000);
